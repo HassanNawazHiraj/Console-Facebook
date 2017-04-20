@@ -1,0 +1,7 @@
+﻿  helper.cpp
+c:\users\hassan\documents\visual studio 2017\projects\console facebook\console facebook\helper.cpp(33): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\string.h(90): note: see declaration of 'strcat'
+c:\users\hassan\documents\visual studio 2017\projects\console facebook\console facebook\helper.cpp(34): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\string.h(90): note: see declaration of 'strcat'
+  Console Facebook.vcxproj -> C:\Users\hassan\Documents\Visual Studio 2017\Projects\Console Facebook\Debug\Console Facebook.exe
+  Console Facebook.vcxproj -> C:\Users\hassan\Documents\Visual Studio 2017\Projects\Console Facebook\Debug\Console Facebook.pdb (Partial PDB)
