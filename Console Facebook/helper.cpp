@@ -2,6 +2,7 @@
 #include "helper.h"
 #include <stdlib.h>
 #include <string>
+#include <iostream>
 /*
 Used to display New Line
 */
@@ -60,7 +61,32 @@ int CreateMenu(char* x,int limit,int total, bool NewLineBefore=true) {
 	}
 	return y;
 }
+
+void MultiInputs(char* x, char* result ,int limit, int total, bool NewLineBefore = true) {
+	if (NewLineBefore) NewLine();
+	char output[10][50];
+	for (int i = 0; i < limit; i++) {
+		printf("Enter %s : ",  (x + (i * total)));
+		scanf("%s", &output[i]);
+		//bool flag = true;
+		for (int j = 0; j < total; j++) {
+			
+				if ((!output[i][j] == '\0')) {
+					*((result + (i * total))+j) = output[i][j];
+				}
+				else {
+					*((result + (i * total)) + j) = '\0';
+				}
+			
+		}
+
+	}
+	
+	//return "";
+}
+
+
 void clrscr()
 {
-	system("@cls||clear");
+	system("@cls || clear");
 }
