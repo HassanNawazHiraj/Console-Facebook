@@ -55,6 +55,7 @@ void RegisterPage() {
 	for (int i = 0; i < 4; i++) {
 		printf("\n%s\n", result[i]);
 	}
+	getchar();
 
 }
 
@@ -74,8 +75,8 @@ void HomepageMenu(int choice) {
 	default:
 		printf("Invalid Choice");
 		exit(EXIT_FAILURE);
-
 	}
+
 }
 
 void Homepage() {

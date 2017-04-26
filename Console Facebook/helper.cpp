@@ -88,5 +88,5 @@ void MultiInputs(char* x, char* result ,int limit, int total, bool NewLineBefore
 
 void clrscr()
 {
-	system("@cls || clear");
+	system("@cls");
 }
