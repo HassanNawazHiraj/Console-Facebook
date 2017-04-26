@@ -37,7 +37,7 @@ void AboutPage() {
 }
 
 void LoginPage() {
-
+	printf("test");
 }
 
 void RegisterPage() {

@@ -82,7 +82,6 @@ void MultiInputs(char* x, char* result ,int limit, int total, bool NewLineBefore
 
 	}
 	
-	//return "";
 }
 
 
