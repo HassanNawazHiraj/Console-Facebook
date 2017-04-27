@@ -3,9 +3,15 @@
 #include <string.h>
 #include <stdlib.h>
 
+struct USD {
+	char username[50];
+	char password[50];
+	char email[50];
+	char name[50];
+} usd;
 char AppTitle[] = "Zalim Community";
 void Homepage();
-void RegisterPage();
+void RegisterPage(int);
 void LoginPage();
 void AboutPage();
 void HomepageMenu(int);
@@ -22,9 +28,9 @@ int main()
 
 
 void AboutPage() {
-	clrscr();
-	EqualLineText(StringCombine(AppTitle, " - About"));
-	NewLine();
+	clearscreen();
+	EqualLine(false,true); printf("%s %s", AppTitle, "- About"); EqualLine(true,true);
+	
 	printf("Program Created By :\t Hasasn Nawaz");
 	NewLine();
 	printf("Version : 0.1 beta");
@@ -40,9 +46,16 @@ void LoginPage() {
 	printf("test");
 }
 
-void RegisterPage() {
-	clrscr();
-	EqualLineText(StringCombine(AppTitle, " - Register"));
+void RegisterPage(int ErrorCode=0) {
+	struct USD userdata;
+	 clearscreen();
+	if (ErrorCode == 1) {
+
+		EqualLineText("Error - Username already exists");
+		NewLine();
+	}
+	EqualLine(false, true); printf("%s %s", AppTitle, "- Register"); EqualLine(true, true);
+
 	NewLine();
 	char ArrRegister[4][50];
 	strcpy_s(ArrRegister[0], "Name");
@@ -52,9 +65,24 @@ void RegisterPage() {
 	char result[4][50];
 	MultiInputs(ArrRegister[0], result[0], 4, 50, true);
 	getchar();
-	for (int i = 0; i < 4; i++) {
-		printf("\n%s\n", result[i]);
+	//populate userdata
+	strcpy(userdata.name, result[0]);
+	strcpy(userdata.username, result[1]);
+	strcpy(userdata.password, result[2]);
+	strcpy(userdata.email, result[3]);
+
+
+	//for (int i = 0; i < 4; i++) {
+	//	CreateFile("test.txt", result[i]);
+	//}
+	//char *test = "Data/users/";
+	//strcat(test, userdata.username);
+
+	if (FileExists(userdata.username)) {
+		RegisterPage(1);
 	}
+	
+	CreateFile(userdata.username, userdata.name);
 	getchar();
 
 }
@@ -80,7 +108,7 @@ void HomepageMenu(int choice) {
 }
 
 void Homepage() {
-	clrscr();
+	clearscreen();
 	EqualLineText(AppTitle);
 	//Defining Menu
 	char ArrMenu[4][50];

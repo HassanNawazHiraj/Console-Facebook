@@ -10,6 +10,12 @@ void NewLine() {
 	printf("\n");
 }
 
+void CreateFile(char* filename, char* data) {
+	FILE *fp = NULL;
+	fp = fopen(filename, "w");
+	fprintf(fp, "%s", data);
+	fclose(fp);
+}
 /*
 Used to display a line of equals signs (=)
 NewLineBefore : add \n before lines of equal signs if true (default : false)
@@ -25,16 +31,20 @@ const char * EqualLineReturn() {
 	return "======================================================";
 }
 
+/* OutDated Function*/
+/*
 char * StringCombine(char* FirstString, char* SecondString) {
+	
 	// Allocate a seprate memory location for X in ram equal to size of firststring and second string
 	// so that it will remain in memory when variable is returned.
 	// Also empty its contents using '\0' to get rid of any garbage value
-	char * x = (char *)malloc(sizeof(FirstString) + sizeof(SecondString));
-	for (int i = 0; i < sizeof(x); i++) x[i] = '\0';
+	char * x = (char *)malloc(sizeof(FirstString) + sizeof(SecondString) + 1);
+	x[0] = '\0';
+	//for (int i = 0; i < sizeof(x); i++) x[i] = '\0';
 	strcat(x, FirstString);
 	strcat(x, SecondString);
 	return x;
-}
+}*/
 
 void EqualLineText(char* x) {
 	printf("%s\n%s\n%s", EqualLineReturn(), x, EqualLineReturn());
@@ -85,7 +95,14 @@ void MultiInputs(char* x, char* result ,int limit, int total, bool NewLineBefore
 }
 
 
-void clrscr()
+void clearscreen()
 {
-	system("@cls");
+	//for (int i = 0; i < 320; i++)
+		//putchar('\n');
+	system("cls");
+}
+
+int FileExists(char* filename) {
+	struct stat buffer;
+	return (stat(filename, &buffer) == 0);
 }
