@@ -16,7 +16,11 @@ void RegisterPage(int);
 void LoginPage(int);
 void AboutPage();
 void HomepageMenu(int);
-char current_user[50];
+void ProfilePage(int);
+void ProfilePageMenu(int);
+static char Cname[50];
+static char Cemail[50];
+static char Cusername[50];
 int main()
 {
 	
@@ -59,23 +63,29 @@ void LoginPage(int ErrorCode=0) {
 	strcpy_s(ArrLogin[1], "Password");
 	MultiInputs(ArrLogin[0], ArrResult[0], 2, 50, true);
 	getchar();
-	strcpy(userdata.username, ArrResult[0]);
-	strcpy(userdata.password, ArrResult[1]);
+	strcpy_s(userdata.username, ArrResult[0]);
+	strcpy_s(userdata.password, ArrResult[1]);
 
 	//check wither the file exists or not
-	if (!(FileExists(userdata.username))) {
+	char test[100] = "Data//";
+	strcat(test, userdata.username);
+	if (!(FileExists(test))) {
 		LoginPage(1);
 	} else {
 
 
 	char logindata[3][50];
-	Login(userdata.username,logindata);
-	strcpy(returndata.password, logindata[0]);
-	strcpy(returndata.email, logindata[1]);
-	strcpy(returndata.name, logindata[2]);
+	Login(test,logindata);
+	strcpy_s(returndata.password, logindata[0]);
+	strcpy_s(returndata.name, logindata[1]);
+	strcpy_s(returndata.email, logindata[2]);
 
 	if (!(strcmp(returndata.password,userdata.password))) {
 		printf("success");
+		strcpy_s(Cusername, userdata.username);
+		strcpy_s(Cemail, returndata.email);
+		strcpy_s(Cname, returndata.name);
+		ProfilePage(0);
 	}
 	else {
 		LoginPage(1);
@@ -104,10 +114,10 @@ void RegisterPage(int ErrorCode=0) {
 	MultiInputs(ArrRegister[0], result[0], 4, 50, true);
 	getchar();
 	//populate userdata
-	strcpy(userdata.name, result[0]);
-	strcpy(userdata.username, result[1]);
-	strcpy(userdata.password, result[2]);
-	strcpy(userdata.email, result[3]);
+	strcpy_s(userdata.name, result[0]);
+	strcpy_s(userdata.username, result[1]);
+	strcpy_s(userdata.password, result[2]);
+	strcpy_s(userdata.email, result[3]);
 
 
 	//for (int i = 0; i < 4; i++) {
@@ -115,14 +125,16 @@ void RegisterPage(int ErrorCode=0) {
 	//}
 	//char *test = "Data/users/";
 	//strcat(test, userdata.username);
-
-	if (FileExists(userdata.username)) {
+	char test[100] = "Data//";
+	strcat(test, userdata.username);
+	if (FileExists(test)) {
 		RegisterPage(1);
 	}
 	char data[500] = "";
 	
-	sprintf(data, "%s\n%s\n%s",userdata.password, userdata.name, userdata.email);
-	CreateFile(userdata.username, data);
+	sprintf_s(data, "%s\n%s\n%s",userdata.password, userdata.name, userdata.email);
+	
+	CreateFile(test, data);
 	//getchar();
 	Homepage(1);
 }
@@ -163,5 +175,34 @@ void Homepage(int MsgCode=0) {
 	strcpy_s(ArrMenu[3], "Exit");
 	HomepageMenu(CreateMenu(ArrMenu[0], 4, 50, true));
 
+}
+
+void ProfilePage(int MsgCode = 0) {
+	clearscreen();
+	EqualLine(false, true); printf("%s - %s's profile", AppTitle, Cname); EqualLine(true, true);
+	char test[100] = "Data//";
+	strcat(test, Cusername);
+	strcat(test, ".wall");
+	if (!(FileExists(test))) {
+		printf("No posts on your wall!");
+	}
+	else {
+		/* Load Wall Posts*/
+	}
+
+	EqualLine(true, true);
+	char ArrMenu[4][50];
+	strcpy_s(ArrMenu[0], "Post on your profile");
+	strcpy_s(ArrMenu[1], "see your friends");
+	strcpy_s(ArrMenu[2], "search someone");
+	strcpy_s(ArrMenu[3], "Exit");
+	ProfilePageMenu(CreateMenu(ArrMenu[0], 4, 50, true));
+}
+
+void ProfilePageMenu(int x) {
+	printf("Your choice %d", x);
+	if (x == 4) {
+		exit(EXIT_FAILURE);
+	}
 }
 

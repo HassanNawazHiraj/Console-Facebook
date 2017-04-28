@@ -1,3 +1,4 @@
+
 void NewLine();
 void EqualLine(bool , bool );
 const char * EqualLineReturn();
