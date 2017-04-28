@@ -3,23 +3,24 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct USD {
+struct UserData {
 	char username[50];
 	char password[50];
 	char email[50];
 	char name[50];
-} usd;
+} ud;
+
 char AppTitle[] = "Zalim Community";
-void Homepage();
+void Homepage(int);
 void RegisterPage(int);
-void LoginPage();
+void LoginPage(int);
 void AboutPage();
 void HomepageMenu(int);
-
+char current_user[50];
 int main()
 {
 	
-	Homepage();
+	Homepage(0);
 	
 	//fflush(stdin);
 	getchar();
@@ -39,15 +40,52 @@ void AboutPage() {
 	strcpy_s(Menu[0], "Go Back");
 	strcpy_s(Menu[1], "Exit");
 	int x = CreateMenu(Menu[0], 2, 10, false);
-	(x == 1) ? Homepage() : exit(EXIT_SUCCESS);
+	(x == 1) ? Homepage(0) : exit(EXIT_SUCCESS);
 }
 
-void LoginPage() {
-	printf("test");
+void LoginPage(int ErrorCode=0) {
+	struct UserData userdata;
+	struct UserData returndata;
+	clearscreen();
+	if (ErrorCode == 1) {
+		EqualLineText("Error - Wrong Username/Password");
+		NewLine();
+	}
+	EqualLine(false, true); printf("%s %s", AppTitle, "- Login"); EqualLine(true, true);
+	NewLine();
+	char ArrLogin[2][50];
+	char ArrResult[2][50];
+	strcpy_s(ArrLogin[0], "Username");
+	strcpy_s(ArrLogin[1], "Password");
+	MultiInputs(ArrLogin[0], ArrResult[0], 2, 50, true);
+	getchar();
+	strcpy(userdata.username, ArrResult[0]);
+	strcpy(userdata.password, ArrResult[1]);
+
+	//check wither the file exists or not
+	if (!(FileExists(userdata.username))) {
+		LoginPage(1);
+	} else {
+
+
+	char logindata[3][50];
+	Login(userdata.username,logindata);
+	strcpy(returndata.password, logindata[0]);
+	strcpy(returndata.email, logindata[1]);
+	strcpy(returndata.name, logindata[2]);
+
+	if (!(strcmp(returndata.password,userdata.password))) {
+		printf("success");
+	}
+	else {
+		LoginPage(1);
+	}
+	
+	}
 }
 
 void RegisterPage(int ErrorCode=0) {
-	struct USD userdata;
+	struct UserData userdata;
 	 clearscreen();
 	if (ErrorCode == 1) {
 
@@ -81,10 +119,12 @@ void RegisterPage(int ErrorCode=0) {
 	if (FileExists(userdata.username)) {
 		RegisterPage(1);
 	}
+	char data[500] = "";
 	
-	CreateFile(userdata.username, userdata.name);
-	getchar();
-
+	sprintf(data, "%s\n%s\n%s",userdata.password, userdata.name, userdata.email);
+	CreateFile(userdata.username, data);
+	//getchar();
+	Homepage(1);
 }
 
 void HomepageMenu(int choice) {
@@ -107,8 +147,13 @@ void HomepageMenu(int choice) {
 
 }
 
-void Homepage() {
+void Homepage(int MsgCode=0) {
 	clearscreen();
+	
+	if (MsgCode == 1) {
+		EqualLineText("User created successfully!");
+		NewLine();
+	}
 	EqualLineText(AppTitle);
 	//Defining Menu
 	char ArrMenu[4][50];

@@ -8,3 +8,4 @@ void clearscreen();
 void MultiInputs(char*, char*, int, int , bool);
 void CreateFile(char*,char*);
 int FileExists(char*);
+void Login(char*, char [3][50]);

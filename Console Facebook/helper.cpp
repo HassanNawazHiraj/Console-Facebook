@@ -16,6 +16,25 @@ void CreateFile(char* filename, char* data) {
 	fprintf(fp, "%s", data);
 	fclose(fp);
 }
+
+void Login(char* filename, char result[3][50]) {
+	FILE *fp;
+	char buff[255];
+
+	fp = fopen(filename, "r");
+
+	buff[0] = '\0';
+	for (int i = 0; i < 3; i++) {
+		fgets(buff, 255, (FILE*)fp);
+		buff[strlen(buff) - 1] = '\0'; /* Remove \n at end*/
+
+		strcpy(result[i], buff);
+		buff[0] = '\0';
+	}
+	fclose(fp);
+
+	
+}
 /*
 Used to display a line of equals signs (=)
 NewLineBefore : add \n before lines of equal signs if true (default : false)
@@ -103,6 +122,6 @@ void clearscreen()
 }
 
 int FileExists(char* filename) {
-	struct stat buffer;
-	return (stat(filename, &buffer) == 0);
+	struct stat buffer2;
+	return (stat(filename, &buffer2) == 0);
 }
