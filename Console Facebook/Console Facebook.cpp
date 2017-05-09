@@ -43,7 +43,7 @@ void AboutPage() {
 	char Menu[2][10];
 	strcpy_s(Menu[0], "Go Back");
 	strcpy_s(Menu[1], "Exit");
-	int x = CreateMenu(Menu[0], 2, 10, false);
+	int x = CreateMenu(Menu[0], 2, 10, false, false);
 	(x == 1) ? Homepage(0) : exit(EXIT_SUCCESS);
 }
 
@@ -90,13 +90,13 @@ void LoginPage(int ErrorCode=0) {
 	else {
 		LoginPage(1);
 	}
-	
+
 	}
 }
 
-void RegisterPage(int ErrorCode=0) {
+void RegisterPage(int ErrorCode = 0) {
 	struct UserData userdata;
-	 clearscreen();
+	clearscreen();
 	if (ErrorCode == 1) {
 
 		EqualLineText("Error - Username already exists");
@@ -131,9 +131,9 @@ void RegisterPage(int ErrorCode=0) {
 		RegisterPage(1);
 	}
 	char data[500] = "";
-	
-	sprintf_s(data, "%s\n%s\n%s",userdata.password, userdata.name, userdata.email);
-	
+
+	sprintf_s(data, "%s\n%s\n%s", userdata.password, userdata.name, userdata.email);
+
 	CreateFile(test, data);
 	//getchar();
 	Homepage(1);
@@ -159,9 +159,9 @@ void HomepageMenu(int choice) {
 
 }
 
-void Homepage(int MsgCode=0) {
+void Homepage(int MsgCode = 0) {
 	clearscreen();
-	
+
 	if (MsgCode == 1) {
 		EqualLineText("User created successfully!");
 		NewLine();
@@ -173,12 +173,17 @@ void Homepage(int MsgCode=0) {
 	strcpy_s(ArrMenu[1], "Login");
 	strcpy_s(ArrMenu[2], "About");
 	strcpy_s(ArrMenu[3], "Exit");
-	HomepageMenu(CreateMenu(ArrMenu[0], 4, 50, true));
+	HomepageMenu(CreateMenu(ArrMenu[0], 4, 50, true, false));
 
 }
 
 void ProfilePage(int MsgCode = 0) {
 	clearscreen();
+	if (MsgCode == 1) {
+
+		EqualLineText("Error - Invalid Choice");
+		NewLine();
+	}
 	EqualLine(false, true); printf("%s - %s's profile", AppTitle, Cname); EqualLine(true, true);
 	char test[100] = "Data//";
 	strcat(test, Cusername);
@@ -187,22 +192,58 @@ void ProfilePage(int MsgCode = 0) {
 		printf("No posts on your wall!");
 	}
 	else {
-		/* Load Wall Posts*/
+		int tpost = GetTotalWallPosts(Cusername);
+		printf("%d posts on your wall!", tpost);
+		EqualLine(true, true);
+		//display posts
+		for (int i = 0; i < (tpost*2); i+=2) {
+			char user[20], post[255];
+			strcpy(user, Cusername);
+			GetWallPost(i, user, post, tpost);
+			printf("%d. (%s) : \n%s\n",((i/2)+10), user, post);
+		}
 	}
 
 	EqualLine(true, true);
 	char ArrMenu[4][50];
 	strcpy_s(ArrMenu[0], "Post on your profile");
 	strcpy_s(ArrMenu[1], "see your friends");
-	strcpy_s(ArrMenu[3], "search someone");
-	strcpy_s(ArrMenu[4], "Exit");
-	ProfilePageMenu(CreateMenu(ArrMenu[0], 4, 50, true));
+	strcpy_s(ArrMenu[2], "search someone");
+	strcpy_s(ArrMenu[3], "Exit");
+	ProfilePageMenu(CreateMenu(ArrMenu[0], 4, 50, true, true));
 }
 
 void ProfilePageMenu(int x) {
 	printf("Your choice %d", x);
 	if (x == 4) {
 		exit(EXIT_FAILURE);
+	}
+
+	switch (x) {
+	case 1:
+
+		break;
+
+	case 2:
+
+		break;
+
+	case 3:
+
+		break;
+
+	case 4:
+		exit(EXIT_FAILURE);
+		break;
+
+	default :
+		if (x >= 10 && x <= 19) {
+			// post view choice.
+		}
+		if (x > 20) {
+			//invalid choice
+			ProfilePage(1);
+		}
 	}
 }
 

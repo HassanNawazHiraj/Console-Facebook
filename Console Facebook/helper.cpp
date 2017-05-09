@@ -36,7 +36,7 @@ void Login(char* filename, char result[3][50]) {
 	
 }
 
-void WallPosts(int number, char user[20], char post[255]) {
+void GetWallPost(int number, char user[20], char post[255], int total) {
 	
 	FILE *fp;
 	char buff[255];
@@ -45,9 +45,14 @@ void WallPosts(int number, char user[20], char post[255]) {
 	strcat(test, ".wall");
 	fp = fopen(test, "r");
 	buff[0] = '\0';
-	for (int i = 0; i < GetTotalWallPosts(user); i++) {
+	for (int i = 0; i < (total*2); i++) {
 		fgets(buff, 255, (FILE*)fp);
-		buff[strlen(buff) - 1] = '\0'; /* Remove \n at end*/
+		if (buff[strlen(buff) - 1] == '\n') {
+			buff[strlen(buff) - 1] = '\0'; /* Remove \n at end*/
+		}
+		else {
+			buff[strlen(buff)] = '\0';
+		}
 		if (i == number) {
 			strcpy(user, buff);
 		}
@@ -62,24 +67,24 @@ void WallPosts(int number, char user[20], char post[255]) {
 
 int GetTotalWallPosts(char user[20]) {
 	int count = 0;
-	FILE *fp;
+	FILE *fp2;
 	char buff[255];
 	char test[100] = "Data//";
 	strcat(test, user);
 	strcat(test, ".wall");
-	fp = fopen(test, "r");
+	fp2 = fopen(test, "r");
 	buff[0] = '\0';
 	char ch = ' ';
-	while (!feof(fp))
+	while (!feof(fp2))
 	{
-		ch = fgetc(fp);
+		ch = fgetc(fp2);
 		if (ch == '\n')
 		{
 			count++;
 		}
 	}
-	fclose(fp);
-	return count;
+	fclose(fp2);
+	return (count+1)/2;
 }
 
 /*
@@ -116,7 +121,7 @@ void EqualLineText(char* x) {
 	printf("%s\n%s\n%s", EqualLineReturn(), x, EqualLineReturn());
 }
 
-int CreateMenu(char* x,int limit,int total, bool NewLineBefore=true) {
+int CreateMenu(char* x,int limit,int total, bool NewLineBefore=true, bool IgnoreAdditionalChoice = false) {
 	if (NewLineBefore) NewLine();
 	for (int i = 0; i < limit; i++) {
 		printf("%d. %s\n", i+1,(x + (i * total)));
@@ -124,16 +129,18 @@ int CreateMenu(char* x,int limit,int total, bool NewLineBefore=true) {
 	bool flag = true;
 	int y;
 	while (flag) {
-		
+
 		printf("Enter your choice: ");
 		scanf_s("%d", &y);
 		getchar();
+		if (IgnoreAdditionalChoice) limit = 100;
 		if (y > 0 && y <= limit) {
 			flag = false;
 		}
 		else {
 			printf("Invalid Option, Please Try Again\n");
-		}
+		
+	}
 	}
 	return y;
 }
