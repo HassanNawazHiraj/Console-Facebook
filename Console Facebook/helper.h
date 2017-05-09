@@ -10,3 +10,5 @@ void MultiInputs(char*, char*, int, int , bool);
 void CreateFile(char*,char*);
 int FileExists(char*);
 void Login(char*, char [3][50]);
+void WallPosts(int, char[20], char[255]);
+int GetTotalWallPosts(char[20]);

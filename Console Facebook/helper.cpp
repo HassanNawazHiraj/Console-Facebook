@@ -35,6 +35,53 @@ void Login(char* filename, char result[3][50]) {
 
 	
 }
+
+void WallPosts(int number, char user[20], char post[255]) {
+	
+	FILE *fp;
+	char buff[255];
+	char test[100] = "Data//";
+	strcat(test, user);
+	strcat(test, ".wall");
+	fp = fopen(test, "r");
+	buff[0] = '\0';
+	for (int i = 0; i < GetTotalWallPosts(user); i++) {
+		fgets(buff, 255, (FILE*)fp);
+		buff[strlen(buff) - 1] = '\0'; /* Remove \n at end*/
+		if (i == number) {
+			strcpy(user, buff);
+		}
+		if (i == (number + 1)) {
+			strcpy(post, buff);
+		}
+		
+		buff[0] = '\0';
+	}
+	fclose(fp);
+}
+
+int GetTotalWallPosts(char user[20]) {
+	int count = 0;
+	FILE *fp;
+	char buff[255];
+	char test[100] = "Data//";
+	strcat(test, user);
+	strcat(test, ".wall");
+	fp = fopen(test, "r");
+	buff[0] = '\0';
+	char ch = ' ';
+	while (!feof(fp))
+	{
+		ch = fgetc(fp);
+		if (ch == '\n')
+		{
+			count++;
+		}
+	}
+	fclose(fp);
+	return count;
+}
+
 /*
 Used to display a line of equals signs (=)
 NewLineBefore : add \n before lines of equal signs if true (default : false)

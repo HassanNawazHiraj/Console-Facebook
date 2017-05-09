@@ -194,8 +194,8 @@ void ProfilePage(int MsgCode = 0) {
 	char ArrMenu[4][50];
 	strcpy_s(ArrMenu[0], "Post on your profile");
 	strcpy_s(ArrMenu[1], "see your friends");
-	strcpy_s(ArrMenu[2], "search someone");
-	strcpy_s(ArrMenu[3], "Exit");
+	strcpy_s(ArrMenu[3], "search someone");
+	strcpy_s(ArrMenu[4], "Exit");
 	ProfilePageMenu(CreateMenu(ArrMenu[0], 4, 50, true));
 }
 
