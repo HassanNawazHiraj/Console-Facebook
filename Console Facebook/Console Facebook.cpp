@@ -18,6 +18,7 @@ void AboutPage();
 void HomepageMenu(int);
 void ProfilePage(int);
 void ProfilePageMenu(int, int);
+void show_post(int);
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -236,7 +237,7 @@ void ProfilePageMenu(int x, int max_post) {
 
 	default :
 		if (x >= 10 && x < max_post) {
-			show_post(x/10);
+			show_post(x);
 		}
 		else {
 			ProfilePage(1);
@@ -249,9 +250,13 @@ void ProfilePageMenu(int x, int max_post) {
 }
 
 void show_post(int num) {
-	EqualLine(false, true); printf("Viewing %s's post on your profile", AppTitle, Cname); EqualLine(true, true);
+	clearscreen();
 	char user[20], post[255]; int tpost = GetTotalWallPosts(Cusername);
-	GetWallPost(num, user, post, tpost);
-	printf("%d. (%s) : \n%s\n", ((i / 2) + 10), user, post);
+	strcpy(user, Cusername);
+	GetWallPost((num-10)*2, user, post, tpost);
+	EqualLine(false, true); printf("Viewing %s's post on your profile", user); EqualLine(true, true);
+	printf("%s : \n%s", user, post);
+	EqualLine(true, true);
+	printf("no replies");
 }
 
