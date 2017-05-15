@@ -17,7 +17,7 @@ void LoginPage(int);
 void AboutPage();
 void HomepageMenu(int);
 void ProfilePage(int);
-void ProfilePageMenu(int);
+void ProfilePageMenu(int, int);
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -166,6 +166,7 @@ void Homepage(int MsgCode = 0) {
 		EqualLineText("User created successfully!");
 		NewLine();
 	}
+
 	EqualLineText(AppTitle);
 	//Defining Menu
 	char ArrMenu[4][50];
@@ -188,6 +189,7 @@ void ProfilePage(int MsgCode = 0) {
 	char test[100] = "Data//";
 	strcat(test, Cusername);
 	strcat(test, ".wall");
+	int i = 0;
 	if (!(FileExists(test))) {
 		printf("No posts on your wall!");
 	}
@@ -196,7 +198,7 @@ void ProfilePage(int MsgCode = 0) {
 		printf("%d posts on your wall!", tpost);
 		EqualLine(true, true);
 		//display posts
-		for (int i = 0; i < (tpost*2); i+=2) {
+		for (i = 0; i < (tpost*2); i+=2) {
 			char user[20], post[255];
 			strcpy(user, Cusername);
 			GetWallPost(i, user, post, tpost);
@@ -210,15 +212,11 @@ void ProfilePage(int MsgCode = 0) {
 	strcpy_s(ArrMenu[1], "see your friends");
 	strcpy_s(ArrMenu[2], "search someone");
 	strcpy_s(ArrMenu[3], "Exit");
-	ProfilePageMenu(CreateMenu(ArrMenu[0], 4, 50, true, true));
+	ProfilePageMenu(CreateMenu(ArrMenu[0], 4, 50, true, true), ((i/2)+10));
 }
 
-void ProfilePageMenu(int x) {
-	printf("Your choice %d", x);
-	if (x == 4) {
-		exit(EXIT_FAILURE);
-	}
-
+void ProfilePageMenu(int x, int max_post) {
+	//printf("Your choice %d", x);
 	switch (x) {
 	case 1:
 
@@ -237,13 +235,23 @@ void ProfilePageMenu(int x) {
 		break;
 
 	default :
-		if (x >= 10 && x <= 19) {
-			// post view choice.
+		if (x >= 10 && x < max_post) {
+			show_post(x/10);
+		}
+		else {
+			ProfilePage(1);
 		}
 		if (x > 20) {
 			//invalid choice
 			ProfilePage(1);
 		}
 	}
+}
+
+void show_post(int num) {
+	EqualLine(false, true); printf("Viewing %s's post on your profile", AppTitle, Cname); EqualLine(true, true);
+	char user[20], post[255]; int tpost = GetTotalWallPosts(Cusername);
+	GetWallPost(num, user, post, tpost);
+	printf("%d. (%s) : \n%s\n", ((i / 2) + 10), user, post);
 }
 
