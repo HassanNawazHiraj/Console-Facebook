@@ -19,6 +19,7 @@ void HomepageMenu(int);
 void ProfilePage(int);
 void ProfilePageMenu(int, int);
 void show_post(int);
+void FriendsPage();
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -224,7 +225,7 @@ void ProfilePageMenu(int x, int max_post) {
 		break;
 
 	case 2:
-
+		FriendsPage();
 		break;
 
 	case 3:
@@ -258,5 +259,10 @@ void show_post(int num) {
 	printf("%s : \n%s", user, post);
 	EqualLine(true, true);
 	printf("no replies");
+}
+
+void FriendsPage() {
+	clearscreen();
+	EqualLine(false, true); printf("%s's Friends", Cname); EqualLine(true, true);
 }
 
