@@ -11,9 +11,26 @@ void NewLine() {
 }
 
 void CreateFile(char* filename, char* data) {
+
 	FILE *fp = NULL;
 	fp = fopen(filename, "w");
 	fprintf(fp, "%s", data);
+	fclose(fp);
+}
+
+void AppendFile(char* filename, char* data, bool idf, bool newline) {
+	char test[255];
+	if (idf) {
+	strcpy(test, "Data//");
+	strcat(test, filename);
+	
+	}
+	else {
+		strcat(test, filename);
+	}
+	FILE *fp = NULL;
+	fp = fopen(test, "a");
+	(newline) ? fprintf(fp, "%s\n", data) : fprintf(fp, "%s", data);
 	fclose(fp);
 }
 
@@ -85,6 +102,36 @@ int GetTotalWallPosts(char user[20]) {
 	}
 	fclose(fp2);
 	return (count+1)/2;
+}
+
+int GetTotalFriends(char user[20]) {
+	
+	int count = 0;
+	
+	char buff[255];
+	char test[100] = "Data//";
+	strcat(test, user);
+	strcat(test, ".friends");
+
+	if (!(FileExists(test, false))) {
+		CreateFile(test, "");
+	}
+
+
+	FILE *fp2;
+	fp2 = fopen(test, "r");
+	buff[0] = '\0';
+	char ch = ' ';
+	while (!feof(fp2))
+	{
+		ch = fgetc(fp2);
+		if (ch == '\n')
+		{
+			count++;
+		}
+	}
+	fclose(fp2);
+	return (count);
 }
 
 /*
@@ -175,7 +222,33 @@ void clearscreen()
 	system("cls");
 }
 
-int FileExists(char* filename) {
+int FileExists(char* filename, bool infolder = false) {
+	char test[255];
+	strcpy(test, filename);
+	if (infolder) InDataFolder(test);
 	struct stat buffer2;
-	return (stat(filename, &buffer2) == 0);
+	return (stat(test, &buffer2) == 0);
+}
+
+void InDataFolder(char* filename) {
+	//printf("|%s|", filename);
+	char test[255];
+	//char test[100] = ;
+	strcpy(test, "");
+	strcat(test, "Data//");
+	strcat(test, filename);
+	strcpy(filename, test);
+}
+
+void AddFriend(char* cuser, char* user) {
+	//update cuser.friends file and user.friends file to add both as friend for each other
+	char cuserext[255]; // username with extension .friends
+	char userext[255];
+	strcpy(cuserext, cuser);
+	strcpy(userext, user);
+	strcat(cuserext, ".friends");
+	strcat(userext, ".friends");
+
+	AppendFile(cuserext, user, true, true);
+	AppendFile(userext, cuser, true, true);
 }

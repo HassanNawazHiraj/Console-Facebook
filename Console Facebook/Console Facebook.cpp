@@ -20,6 +20,10 @@ void ProfilePage(int);
 void ProfilePageMenu(int, int);
 void show_post(int);
 void FriendsPage();
+void FriendsPageMenu(int);
+void SearchPage(int);
+void SearchPageMenu(int);
+void AddFriendMenu(int, char[20]);
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -71,7 +75,7 @@ void LoginPage(int ErrorCode=0) {
 	//check wither the file exists or not
 	char test[100] = "Data//";
 	strcat(test, userdata.username);
-	if (!(FileExists(test))) {
+	if (!(FileExists(test, false))) {
 		LoginPage(1);
 	} else {
 
@@ -129,9 +133,12 @@ void RegisterPage(int ErrorCode = 0) {
 	//strcat(test, userdata.username);
 	char test[100] = "Data//";
 	strcat(test, userdata.username);
-	if (FileExists(test)) {
+	if (FileExists(test, false)) {
 		RegisterPage(1);
 	}
+	else {
+
+	
 	char data[500] = "";
 
 	sprintf_s(data, "%s\n%s\n%s", userdata.password, userdata.name, userdata.email);
@@ -139,6 +146,7 @@ void RegisterPage(int ErrorCode = 0) {
 	CreateFile(test, data);
 	//getchar();
 	Homepage(1);
+	}
 }
 
 void HomepageMenu(int choice) {
@@ -187,12 +195,16 @@ void ProfilePage(int MsgCode = 0) {
 		EqualLineText("Error - Invalid Choice");
 		NewLine();
 	}
+	if (MsgCode == 2) {
+		EqualLineText("User added as your friend");
+		NewLine();
+	}
 	EqualLine(false, true); printf("%s - %s's profile", AppTitle, Cname); EqualLine(true, true);
 	char test[100] = "Data//";
 	strcat(test, Cusername);
 	strcat(test, ".wall");
 	int i = 0;
-	if (!(FileExists(test))) {
+	if (!(FileExists(test, false))) {
 		printf("No posts on your wall!");
 	}
 	else {
@@ -221,7 +233,7 @@ void ProfilePageMenu(int x, int max_post) {
 	//printf("Your choice %d", x);
 	switch (x) {
 	case 1:
-
+		printf("nothing done here");
 		break;
 
 	case 2:
@@ -229,7 +241,7 @@ void ProfilePageMenu(int x, int max_post) {
 		break;
 
 	case 3:
-
+		SearchPage(0);
 		break;
 
 	case 4:
@@ -263,6 +275,102 @@ void show_post(int num) {
 
 void FriendsPage() {
 	clearscreen();
-	EqualLine(false, true); printf("%s's Friends", Cname); EqualLine(true, true);
+	int tf = GetTotalFriends(Cusername);
+	EqualLine(false, true); printf("%s's Friends (%d)", Cname, tf); EqualLine(true, true);
+	if (tf == 0) {
+		printf("You don't have any friends :(");
+		EqualLine(true, true);
+	}
+	char ArrMenu[3][50];
+	strcpy_s(ArrMenu[0], "Search someone");
+	strcpy_s(ArrMenu[1], "Go back");
+	strcpy_s(ArrMenu[2], "Exit");
+	FriendsPageMenu(CreateMenu(ArrMenu[0], 3, 50, true, true));
+}
+void FriendsPageMenu(int x) {
+	switch (x) {
+	case 1:
+		SearchPage(0);
+		break;
+
+	case 2:
+		ProfilePage(0);
+		break;
+
+	case 3:
+		exit(EXIT_SUCCESS);
+		break;
+	}
+}
+
+void SearchPage(int x = 0) {
+	clearscreen();
+	switch (x) {
+	case 1:
+		EqualLine(false, true);
+		printf("You can't search yourself!");
+		NewLine();
+		break;
+	}
+	EqualLine(false, true); printf("Zalim Community - Search"); EqualLine(true, true);
+	char user[20];
+	printf("Enter Name : ");
+	fflush(stdin);
+	scanf("%s", user);
+	getchar();
+	//InDataFolder(user);
+	if (FileExists(user, true)) {
+		if (strcmp(user,Cusername) == 0) {
+			SearchPage(1);
+		}
+		else {
+			char ArrMenu[3][50];
+			strcpy_s(ArrMenu[0], "Add as friend");
+			strcpy_s(ArrMenu[1], "Go back");
+			strcpy_s(ArrMenu[2], "Exit");
+			AddFriendMenu(CreateMenu(ArrMenu[0], 3, 50, true, true), user);
+		}
+		
+	}
+	else {
+	printf("No Such User");
+	EqualLine(true, true);
+	char ArrMenu[3][50];
+	strcpy_s(ArrMenu[0], "Search Again");
+	strcpy_s(ArrMenu[1], "Go back");
+	strcpy_s(ArrMenu[2], "Exit");
+	SearchPageMenu(CreateMenu(ArrMenu[0], 3, 50, true, true));
+	//getchar();
+	}
+}
+
+void SearchPageMenu(int x) {
+	switch (x) {
+	case 1:
+		SearchPage(0);
+		break;
+
+	case 2:
+		ProfilePage(0);
+		break;
+
+	case 3:
+		exit(EXIT_SUCCESS);
+		break;
+	}
+}
+void AddFriendMenu(int x, char user[20]) {
+	switch (x) {
+	case 1:
+		AddFriend(Cusername, user);
+		ProfilePage(2);
+		break;
+	case 2:
+		ProfilePage(0);
+		break;
+	case 3:
+		exit(EXIT_SUCCESS);
+		break;
+	}
 }
 
