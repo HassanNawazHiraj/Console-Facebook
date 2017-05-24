@@ -104,6 +104,38 @@ int GetTotalWallPosts(char user[20]) {
 	return (count+1)/2;
 }
 
+void ShowAllFriends(char user[20], char friends[100][255], int* total, int* limit, int* choice) {
+	
+	int totalf = GetTotalFriends(user);
+	FILE *fp2;
+	char buff[255];
+	char test[100] = "Data//";
+	strcat(test, user);
+	strcat(test, ".friends");
+	fp2 = fopen(test, "r");
+	buff[0] = '\0';
+	
+	int i = 0;
+	while (i<totalf)
+	{
+		fgets(buff, 255, (FILE*)fp2);
+		buff[strlen(buff) - 1] = '\0';
+		strcpy(friends[i], buff);
+		i++;
+		buff[0] = '\0';
+	}
+	fclose(fp2);
+//	friends[i] = "Search Someone";
+	strcpy(friends[i], "search someone");
+	strcpy(friends[i+1], "go back");
+	strcpy(friends[i+2], "exit");
+	
+	*total = i + 3;
+	*limit = 255;
+	*choice = CreateMenu(friends[0], i + 3, 255, true, false);
+	
+}
+
 int GetTotalFriends(char user[20]) {
 	
 	int count = 0;
@@ -241,6 +273,8 @@ void InDataFolder(char* filename) {
 }
 
 void AddFriend(char* cuser, char* user) {
+	/*[Remains to code]Check if friend already exists*/
+
 	//update cuser.friends file and user.friends file to add both as friend for each other
 	char cuserext[255]; // username with extension .friends
 	char userext[255];

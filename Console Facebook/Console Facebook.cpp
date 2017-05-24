@@ -24,6 +24,7 @@ void FriendsPageMenu(int);
 void SearchPage(int);
 void SearchPageMenu(int);
 void AddFriendMenu(int, char[20]);
+void ViewFriends(char[100][255], int, int, int);
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -280,12 +281,19 @@ void FriendsPage() {
 	if (tf == 0) {
 		printf("You don't have any friends :(");
 		EqualLine(true, true);
-	}
+	
 	char ArrMenu[3][50];
 	strcpy_s(ArrMenu[0], "Search someone");
 	strcpy_s(ArrMenu[1], "Go back");
 	strcpy_s(ArrMenu[2], "Exit");
 	FriendsPageMenu(CreateMenu(ArrMenu[0], 3, 50, true, true));
+
+	} else {
+		char friends[100][255];
+		int total, limit, choice;
+		ShowAllFriends(Cusername,friends,&total,&limit,&choice);
+		ViewFriends(friends, total, limit, choice);
+	}
 }
 void FriendsPageMenu(int x) {
 	switch (x) {
@@ -374,3 +382,6 @@ void AddFriendMenu(int x, char user[20]) {
 	}
 }
 
+void ViewFriends(char friends[100][255], int total, int limit, int choice) {
+	printf("\n%d,%d,%d", total, limit, choice);
+}

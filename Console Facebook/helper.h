@@ -16,3 +16,4 @@ int GetTotalWallPosts(char[20]);
 int GetTotalFriends(char user[20]);
 void InDataFolder(char*);
 void AddFriend(char*, char*);
+void ShowAllFriends(char[20], char [100][255], int*, int*, int*);
