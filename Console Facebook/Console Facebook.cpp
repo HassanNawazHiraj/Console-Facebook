@@ -25,6 +25,7 @@ void SearchPage(int);
 void SearchPageMenu(int);
 void AddFriendMenu(int, char[20]);
 void ViewFriends(char[100][255], int, int, int);
+void ViewFriendProfile(char[20],int);
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -384,4 +385,53 @@ void AddFriendMenu(int x, char user[20]) {
 
 void ViewFriends(char friends[100][255], int total, int limit, int choice) {
 	printf("\n%d,%d,%d", total, limit, choice);
+	for (int i = 0; i < (total - 3); i++) {
+		ViewFriendProfile(friends[i],0);
+	}
+	if (choice == (total - 2)) {
+		SearchPage(0);
+	}
+	if (choice == (total - 1)) {
+		ProfilePage(0);
+	}
+	if (choice == total) {
+		exit(EXIT_SUCCESS);
+	}
+}
+
+void ViewFriendProfile(char user[20], int MsgCode=0) {
+	clearscreen();
+	if (MsgCode == 1) {
+
+		EqualLineText("Error - Invalid Choice");
+		NewLine();
+	}
+	
+	EqualLine(false, true); printf("%s - %s's profile (your friend)", AppTitle, user); EqualLine(true, true);
+	char test[100] = "Data//";
+	strcat(test, user);
+	strcat(test, ".wall");	
+	int i = 0;
+	if (!(FileExists(test, false))) {
+		printf("No posts on %s's wall!", user);
+	}
+	else {
+		int tpost = GetTotalWallPosts(Cusername);
+		printf("%d posts on %s's wall!", tpost, user);
+		EqualLine(true, true);
+		//display posts
+		for (i = 0; i < (tpost * 2); i += 2) {
+			char user[20], post[255];
+			strcpy(user, Cusername);
+			GetWallPost(i, user, post, tpost);
+			printf("%d. (%s) : \n%s\n", ((i / 2) + 10), user, post);
+		}
+	}
+
+	EqualLine(true, true);
+	char ArrMenu[3][50];
+	strcpy_s(ArrMenu[0], "Post on his profile");
+	strcpy_s(ArrMenu[1], "back");
+	strcpy_s(ArrMenu[2], "Exit");
+	CreateMenu(ArrMenu[0], 3, 50, true, true), ((i / 2) + 10);
 }
