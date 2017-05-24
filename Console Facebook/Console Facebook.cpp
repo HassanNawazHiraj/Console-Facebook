@@ -433,5 +433,5 @@ void ViewFriendProfile(char user[20], int MsgCode=0) {
 	strcpy_s(ArrMenu[0], "Post on his profile");
 	strcpy_s(ArrMenu[1], "back");
 	strcpy_s(ArrMenu[2], "Exit");
-	CreateMenu(ArrMenu[0], 3, 50, true, true), ((i / 2) + 10);
+	CreateMenu(ArrMenu[0], 3, 50, true, true);//, ((i / 2) + 10);
 }
