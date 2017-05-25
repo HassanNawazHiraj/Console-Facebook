@@ -42,6 +42,7 @@ int main()
 
 void AboutPage() {
 	clearscreen();
+	CreatePostOnWall("test", "ajmal", "Hello");
 	EqualLine(false,true); printf("%s %s", AppTitle, "- About"); EqualLine(true,true);
 	
 	printf("Program Created By :\t Hasasn Nawaz");
@@ -214,16 +215,7 @@ void ProfilePage(int MsgCode = 0) {
 		printf("No posts on your wall!");
 	}
 	else {
-		int tpost = GetTotalWallPosts(Cusername);
-		printf("%d posts on your wall!", tpost);
-		EqualLine(true, true);
-		//display posts
-		for (i = 0; i < (tpost*2); i+=2) {
-			char user[20], post[255];
-			strcpy(user, Cusername);
-			GetWallPost(i, user, post, tpost);
-			printf("%d. (%s) : \n%s\n",((i/2)+10), user, post);
-		}
+		DisplayWallPosts(Cusername);
 	}
 
 	EqualLine(true, true);

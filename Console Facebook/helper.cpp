@@ -3,9 +3,40 @@
 #include <stdlib.h>
 #include <string>
 #include <iostream>
+struct Reply {
+	int ReplyId;
+	char user[20];
+	char reply[50];
+	int likes;
+};
+typedef struct Reply ReplyStruct;
+
+struct Comment {
+	int CommentId;
+	char user[20];
+	char comment[80];
+	int likes;
+	ReplyStruct CommentReply[5];
+};
+typedef struct Comment CommentStruct;
+
+struct WallPost
+{
+	int PostId;
+	char User[20];
+	char Post[255];
+	int Likes;
+	CommentStruct comments[10];
+};
+typedef struct WallPost WallPostStruct;
+
+
+
+
 /*
 Used to display New Line
 */
+
 void NewLine() {
 	printf("\n");
 }
@@ -320,4 +351,41 @@ bool AddFriend(char* cuser, char* user) {
 		AppendFile(userext, cuser, true, true);
 	}
 	return true;
+}
+
+
+
+bool CreatePostOnWall(char walluser[50], char posteruser[50], char post[255]) {
+	
+	char test[100];
+	strcpy(test, "Data\\");
+	strcat(test, walluser);
+	strcat(test, ".wall");
+	WallPostStruct wallpost;
+	wallpost.Likes = 0;
+	wallpost.PostId = 0; /* Ill work on increment later*/
+	strcpy(wallpost.User, posteruser);
+	strcpy(wallpost.Post, post);
+	FILE* fp = fopen(test, "a");
+	if (fp == NULL) {
+		return false;
+	}
+	else {
+		fwrite(&wallpost, sizeof(wallpost), 1, fp);
+	}
+	fclose(fp);
+	return true;
+}
+
+void DisplayWallPosts(char u[50]) {
+	int tpost = GetTotalWallPosts(u);
+	printf("%d posts on your wall!", tpost);
+	EqualLine(true, true);
+	//display posts
+	for (int i = 0; i < (tpost * 2); i += 2) {
+		char user[20], post[255];
+		strcpy(user, u);
+		GetWallPost(i, user, post, tpost);
+		printf("%d. (%s) : \n%s\n", ((i / 2) + 10), user, post);
+	}
 }

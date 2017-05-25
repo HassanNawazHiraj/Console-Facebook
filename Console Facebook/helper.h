@@ -18,3 +18,5 @@ void InDataFolder(char*);
 bool AddFriend(char*, char*);
 void ShowAllFriends(char[20], char [100][255], int*, int*, int*);
 bool FriendExists(char[20], char[20]);
+void DisplayWallPosts(char[50]);
+bool CreatePostOnWall(char[50], char[50], char[255]);
