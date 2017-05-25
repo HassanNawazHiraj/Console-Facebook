@@ -272,7 +272,37 @@ void InDataFolder(char* filename) {
 	strcpy(filename, test);
 }
 
-void AddFriend(char* cuser, char* user) {
+bool FriendExists(char user[20], char cmp_user[20]) {
+	//int count = 0;
+
+	char buff[255];
+	char test[100] = "Data//";
+	strcat(test, user);
+	strcat(test, ".friends");
+
+	if (!(FileExists(test, false))) {
+		CreateFile(test, "");
+	}
+
+
+	FILE *fp2;
+	fp2 = fopen(test, "r");
+	buff[0] = '\0';
+//	char ch = ' ';
+
+	while (!feof(fp2))
+	{
+		fgets(buff, 255, fp2);
+		if (strcmp(buff, cmp_user) == 0) {
+			fclose(fp2);
+			return true;
+		}
+	}
+	fclose(fp2);
+	return false;
+}
+
+bool AddFriend(char* cuser, char* user) {
 	/*[Remains to code]Check if friend already exists*/
 
 	//update cuser.friends file and user.friends file to add both as friend for each other
@@ -282,7 +312,12 @@ void AddFriend(char* cuser, char* user) {
 	strcpy(userext, user);
 	strcat(cuserext, ".friends");
 	strcat(userext, ".friends");
-
-	AppendFile(cuserext, user, true, true);
-	AppendFile(userext, cuser, true, true);
+	if (FriendExists(cuser, user)) {
+		return false;
+	}
+	else {
+		AppendFile(cuserext, user, true, true);
+		AppendFile(userext, cuser, true, true);
+	}
+	return true;
 }

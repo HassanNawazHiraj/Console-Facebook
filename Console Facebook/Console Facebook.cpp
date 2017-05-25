@@ -201,6 +201,10 @@ void ProfilePage(int MsgCode = 0) {
 		EqualLineText("User added as your friend");
 		NewLine();
 	}
+	if (MsgCode == 3) {
+		EqualLineText("You already are friends with this user");
+		NewLine();
+	}
 	EqualLine(false, true); printf("%s - %s's profile", AppTitle, Cname); EqualLine(true, true);
 	char test[100] = "Data//";
 	strcat(test, Cusername);
@@ -333,6 +337,7 @@ void SearchPage(int x = 0) {
 			SearchPage(1);
 		}
 		else {
+			printf("User Found!\n");
 			char ArrMenu[3][50];
 			strcpy_s(ArrMenu[0], "Add as friend");
 			strcpy_s(ArrMenu[1], "Go back");
@@ -371,8 +376,12 @@ void SearchPageMenu(int x) {
 void AddFriendMenu(int x, char user[20]) {
 	switch (x) {
 	case 1:
-		AddFriend(Cusername, user);
-		ProfilePage(2);
+		if (AddFriend(Cusername, user)) {
+			ProfilePage(2);
+		}
+		else {
+			ProfilePage(3);
+		}
 		break;
 	case 2:
 		ProfilePage(0);
