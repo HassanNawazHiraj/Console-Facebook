@@ -18,7 +18,7 @@ void AboutPage();
 void HomepageMenu(int);
 void ProfilePage(int);
 void ProfilePageMenu(int, int);
-void show_post(int);
+void ShowPost(char[50], int);
 void FriendsPage();
 void FriendsPageMenu(int);
 void SearchPage(int);
@@ -28,6 +28,7 @@ void ViewFriends(char[100][255], int, int, int);
 void ViewFriendProfile(char[20],int);
 void PostOnWall(char[50]);
 void ViewFriendProfileMenu(int, char[50], int);
+void ShowPostMenu(int, char[50]);
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -257,7 +258,7 @@ void ProfilePageMenu(int x, int max_post) {
 
 	default :
 		if (x >= 10 && x < max_post) {
-			show_post(x);
+			ShowPost(Cusername,x);
 		}
 		else {
 			ProfilePage(1);
@@ -269,15 +270,54 @@ void ProfilePageMenu(int x, int max_post) {
 	}
 }
 
-void show_post(char userwall[50], int num) {
+void ShowPost(char userwall[50], int num) {
 	clearscreen();
-	char user[20], post[255]; int tpost = GetTotalWallPosts(Cusername);
-	strcpy(user, Cusername);
-	GetWallPost((num-10)*2, user, post, tpost);
-	EqualLine(false, true); printf("Viewing %s's post on your profile", user); EqualLine(true, true);
-	printf("%s : \n%s", user, post);
+	char user[20], post[255]; int tpost = GetTotalWallPosts(userwall);
+	strcpy(user, userwall);
+	char poster[50]; int likes;
+	CommentStruct c[10];
+	GetWallPost(num-10, user, poster, post, tpost, &likes, c);
+	EqualLine(false, true); (strcmp(Cusername, userwall) == 0) ? printf("Viewing %s's post on your profile", poster) : printf("Viewing %s's post on %s's profile", poster, userwall); EqualLine(true, true);
+	printf("%s (%d likes) : \n%s", poster,likes, post);
 	EqualLine(true, true);
-	printf("no replies");
+	// Comments & replies
+	
+	if ((strcmp(c[0].user,"") == 0)  &&  (strcmp(c[0].comment,"") == 0) ) {
+		printf("No Comments on this post");
+	}
+	else {
+		// read comments
+	}
+	EqualLine(true, true);
+	char ArrMenu[4][50];
+	strcpy_s(ArrMenu[0], "Comment on this post");
+	strcpy_s(ArrMenu[1], "Like this post");
+	strcpy_s(ArrMenu[2], "Go back");
+	strcpy_s(ArrMenu[3], "Exit");
+	ShowPostMenu(CreateMenu(ArrMenu[0], 4, 50, true, true), userwall);
+
+
+}
+
+void ShowPostMenu(int x, char user[50]) {
+	switch (x) {
+	case 1:
+
+		break;
+
+	case 2:
+
+		break;
+
+	case 3:
+		(strcmp(user, Cusername) == 0) ? ProfilePage(0) : ViewFriendProfile(user, 0);
+		break;
+
+	case 4:
+		exit(EXIT_SUCCESS);
+		break;
+
+	}
 }
 
 void FriendsPage() {
@@ -466,7 +506,7 @@ void ViewFriendProfileMenu(int x, char u[50], int max_post) {
 		break;
 	default:
 		if (x >= 10 && x < max_post) {
-			show_post(x);
+			ShowPost(u,x);
 		}
 		else {
 			ViewFriendProfile(u,1);

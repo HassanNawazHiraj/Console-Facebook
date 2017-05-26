@@ -3,32 +3,6 @@
 #include <stdlib.h>
 #include <string>
 #include <iostream>
-struct Reply {
-	int ReplyId;
-	char user[20];
-	char reply[50];
-	int likes;
-};
-typedef struct Reply ReplyStruct;
-
-struct Comment {
-	int CommentId;
-	char user[20];
-	char comment[80];
-	int likes;
-	ReplyStruct CommentReply[5];
-};
-typedef struct Comment CommentStruct;
-
-struct WallPost
-{
-	int PostId;
-	char User[20];
-	char Post[255];
-	int Likes;
-	CommentStruct comments[10];
-};
-typedef struct WallPost WallPostStruct;
 
 
 
@@ -84,48 +58,63 @@ void Login(char* filename, char result[3][50]) {
 	
 }
 
-void GetWallPost(int number, char user[20], char post[255], int total) {
+void GetWallPost(int number, char user[20], char poster[50], char post[255], int total, int* likes, CommentStruct c[10]) {
 	
 	FILE *fp;
-	char buff[255];
+//	char buff[255];
 	char test[100] = "Data//";
 	strcat(test, user);
 	strcat(test, ".wall");
 	fp = fopen(test, "r");
-	buff[0] = '\0';
-	for (int i = 0; i < (total*2); i++) {
-		fgets(buff, 255, (FILE*)fp);
-		if (buff[strlen(buff) - 1] == '\n') {
-			buff[strlen(buff) - 1] = '\0'; /* Remove \n at end*/
-		}
-		else {
-			buff[strlen(buff)] = '\0';
-		}
+//	buff[0] = '\0';
+	WallPostStruct w;
+	for (int i = 0; i <= total; i++) {
+		fread(&w, sizeof(w), 1, fp);
 		if (i == number) {
-			strcpy(user, buff);
+			strcpy(poster, w.User);
+			strcpy(post, w.Post);
+			*likes = w.Likes;
+			for (int j = 0; j < 10; j++) {
+				c[j] = w.comments[j];
+			}
+			c = w.comments;
 		}
-		if (i == (number + 1)) {
-			strcpy(post, buff);
-		}
-		
-		buff[0] = '\0';
+		//fgets(buff, 255, (FILE*)fp);
+		//if (buff[strlen(buff) - 1] == '\n') {
+		//	buff[strlen(buff) - 1] = '\0'; /* Remove \n at end*/
+		//}
+		//else {
+		//	buff[strlen(buff)] = '\0';
+		//}
+		//if (i == number) {
+		//	strcpy(user, buff);
+		//}
+		//if (i == (number + 1)) {
+		//	strcpy(post, buff);
+		//}
+		//
+		//buff[0] = '\0';
 	}
 	fclose(fp);
 }
 
 int GetTotalWallPosts(char user[20]) {
+	
 	int count = 0;
 	FILE *fp2;
 	char buff[255];
 	char test[100] = "Data//";
 	strcat(test, user);
 	strcat(test, ".wall");
-	fp2 = fopen(test, "r");
-	buff[0] = '\0';
-	fseek(fp2, 0, 2);
-	long int res = ftell(fp2);
-	fclose(fp2);
-	return (int) res/sizeof(WallPostStruct);
+	if (FileExists(test, false)) {
+		fp2 = fopen(test, "r");
+		buff[0] = '\0';
+		fseek(fp2, 0, 2);
+		long int res = ftell(fp2);
+		fclose(fp2);
+		return (int)res / sizeof(WallPostStruct);
+	}
+	return 0;
 	/*  Old code for sequential file
 	int count = 0;
 	FILE *fp2;
@@ -402,6 +391,11 @@ bool CreatePostOnWall(char walluser[50], char posteruser[50], char post[255]) {
 	WallPostStruct wallpost;
 	wallpost.Likes = 0;
 	wallpost.PostId = GetLastIdForWallPost(walluser) + 1;
+	//inilize struct for checking later
+	for (int i = 0; i < 10; i++) {
+		wallpost.comments[i] = EmptyCommentStruct;
+	}
+	
 	strcpy(wallpost.User, posteruser);
 	strcpy(wallpost.Post, post);
 	FILE* fp = fopen(test, "a");

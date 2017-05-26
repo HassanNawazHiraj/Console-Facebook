@@ -1,3 +1,29 @@
+struct Reply {
+	int ReplyId;
+	char user[20];
+	char reply[50];
+	int likes;
+};
+typedef struct Reply ReplyStruct;
+
+struct Comment {
+	int CommentId;
+	char user[20];
+	char comment[80];
+	int likes;
+	ReplyStruct CommentReply[5];
+};
+typedef struct Comment CommentStruct;
+static const CommentStruct EmptyCommentStruct = { 0 };
+struct WallPost
+{
+	int PostId;
+	char User[20];
+	char Post[255];
+	int Likes;
+	CommentStruct comments[10];
+};
+typedef struct WallPost WallPostStruct;
 
 void NewLine();
 void EqualLine(bool , bool );
@@ -11,7 +37,7 @@ void CreateFile(char*,char*);
 void AppendFile(char*, char*, bool, bool);
 int FileExists(char*, bool);
 void Login(char*, char [3][50]);
-void GetWallPost(int, char[20], char[255],int);
+void GetWallPost(int, char[20], char [50], char[255],int, int*, CommentStruct [10]);
 int GetTotalWallPosts(char[20]);
 int GetTotalFriends(char user[20]);
 void InDataFolder(char*);
