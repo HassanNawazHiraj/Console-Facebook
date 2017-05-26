@@ -26,6 +26,8 @@ void SearchPageMenu(int);
 void AddFriendMenu(int, char[20]);
 void ViewFriends(char[100][255], int, int, int);
 void ViewFriendProfile(char[20],int);
+void PostOnWall(char[50]);
+void ViewFriendProfileMenu(int, char[50], int);
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -42,7 +44,9 @@ int main()
 
 void AboutPage() {
 	clearscreen();
-	CreatePostOnWall("test", "ajmal", "Hello");
+	//CreatePostOnWall("hassan", "Ali", "Hello");
+	//printf("|%d|", GetLastIdForWallPost("test"));
+	//printf("|%ld|", GetTotalWallPosts("hassan"));
 	EqualLine(false,true); printf("%s %s", AppTitle, "- About"); EqualLine(true,true);
 	
 	printf("Program Created By :\t Hasasn Nawaz");
@@ -206,32 +210,37 @@ void ProfilePage(int MsgCode = 0) {
 		EqualLineText("You already are friends with this user");
 		NewLine();
 	}
+	if (MsgCode == 4) {
+		EqualLineText("Post created on your wall!");
+		NewLine();
+	}
 	EqualLine(false, true); printf("%s - %s's profile", AppTitle, Cname); EqualLine(true, true);
 	char test[100] = "Data//";
 	strcat(test, Cusername);
 	strcat(test, ".wall");
-	int i = 0;
+	
 	if (!(FileExists(test, false))) {
 		printf("No posts on your wall!");
 	}
 	else {
-		DisplayWallPosts(Cusername);
+		DisplayWallPosts(Cusername, true);
 	}
 
 	EqualLine(true, true);
+	int tpost = GetTotalWallPosts(Cusername);
 	char ArrMenu[4][50];
 	strcpy_s(ArrMenu[0], "Post on your profile");
 	strcpy_s(ArrMenu[1], "see your friends");
 	strcpy_s(ArrMenu[2], "search someone");
 	strcpy_s(ArrMenu[3], "Exit");
-	ProfilePageMenu(CreateMenu(ArrMenu[0], 4, 50, true, true), ((i/2)+10));
+	ProfilePageMenu(CreateMenu(ArrMenu[0], 4, 50, true, true), tpost+10);
 }
 
 void ProfilePageMenu(int x, int max_post) {
 	//printf("Your choice %d", x);
 	switch (x) {
 	case 1:
-		printf("nothing done here");
+		PostOnWall(Cusername);
 		break;
 
 	case 2:
@@ -260,7 +269,7 @@ void ProfilePageMenu(int x, int max_post) {
 	}
 }
 
-void show_post(int num) {
+void show_post(char userwall[50], int num) {
 	clearscreen();
 	char user[20], post[255]; int tpost = GetTotalWallPosts(Cusername);
 	strcpy(user, Cusername);
@@ -407,32 +416,79 @@ void ViewFriendProfile(char user[20], int MsgCode=0) {
 		EqualLineText("Error - Invalid Choice");
 		NewLine();
 	}
+	if (MsgCode == 2) {
+		EqualLineText("Post Created!");
+		NewLine();
+	}
 	
-	EqualLine(false, true); printf("%s - %s's profile (your friend)", AppTitle, user); EqualLine(true, true);
+	EqualLine(false, true); printf("%s - %s's profile (your friend)", AppTitle, user); EqualLine(true, false);
 	char test[100] = "Data//";
 	strcat(test, user);
 	strcat(test, ".wall");	
 	int i = 0;
 	if (!(FileExists(test, false))) {
-		printf("No posts on %s's wall!", user);
+		printf("\nNo posts on %s's wall!", user);
 	}
 	else {
-		int tpost = GetTotalWallPosts(Cusername);
-		printf("%d posts on %s's wall!", tpost, user);
+		int tpost = GetTotalWallPosts(user);
+	//	printf("%d posts on %s's wall!", tpost, user);
 		EqualLine(true, true);
 		//display posts
-		for (i = 0; i < (tpost * 2); i += 2) {
-			char user[20], post[255];
-			strcpy(user, Cusername);
-			GetWallPost(i, user, post, tpost);
-			printf("%d. (%s) : \n%s\n", ((i / 2) + 10), user, post);
-		}
+		//for (i = 0; i < (tpost * 2); i += 2) {
+		//	char  u[20],post[255];
+		//	strcpy(u, user);
+		//	//strcpy(user, Cusername);
+		//	GetWallPost(i, u, post, tpost);
+		//	printf("%d. (%s) : \n%s\n", ((i / 2) + 10), u, post);
+		//}
+		DisplayWallPosts(user, false);
 	}
 
 	EqualLine(true, true);
+	int tpost = GetTotalWallPosts(user);
 	char ArrMenu[3][50];
 	strcpy_s(ArrMenu[0], "Post on his profile");
 	strcpy_s(ArrMenu[1], "back");
 	strcpy_s(ArrMenu[2], "Exit");
-	CreateMenu(ArrMenu[0], 3, 50, true, true);//, ((i / 2) + 10);
+	ViewFriendProfileMenu(CreateMenu(ArrMenu[0], 3, 50, true, true),user, tpost+10);//, ((i / 2) + 10);
+}
+
+void ViewFriendProfileMenu(int x, char u[50], int max_post) {
+	switch (x) {
+	case 1:
+		PostOnWall(u);
+		break;
+	case 2:
+		ProfilePage(0);
+		break;
+	case 3:
+		exit(EXIT_SUCCESS);
+		break;
+	default:
+		if (x >= 10 && x < max_post) {
+			show_post(x);
+		}
+		else {
+			ViewFriendProfile(u,1);
+		}
+		if (x > 20) {
+			//invalid choice
+			ViewFriendProfile(u, 1);
+		}
+	}
+}
+
+void PostOnWall(char u[50]) {
+	char post[255];
+	clearscreen();
+	EqualLine(false, true); printf("Post on %s's Profile!", u); EqualLine(true, true);
+	printf("Enter your post (255 max) : ");
+	fgets(post, 255, stdin);
+	CreatePostOnWall(u, Cusername, post);
+	if (strcmp(u, Cusername) == 0) {
+		ProfilePage(4);
+	}
+	else {
+		ViewFriendProfile(u, 2);
+	}
 }

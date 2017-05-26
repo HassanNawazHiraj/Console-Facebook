@@ -122,6 +122,19 @@ int GetTotalWallPosts(char user[20]) {
 	strcat(test, ".wall");
 	fp2 = fopen(test, "r");
 	buff[0] = '\0';
+	fseek(fp2, 0, 2);
+	long int res = ftell(fp2);
+	fclose(fp2);
+	return (int) res/sizeof(WallPostStruct);
+	/*  Old code for sequential file
+	int count = 0;
+	FILE *fp2;
+	char buff[255];
+	char test[100] = "Data//";
+	strcat(test, user);
+	strcat(test, ".wall");
+	fp2 = fopen(test, "r");
+	buff[0] = '\0';
 	char ch = ' ';
 	while (!feof(fp2))
 	{
@@ -133,6 +146,7 @@ int GetTotalWallPosts(char user[20]) {
 	}
 	fclose(fp2);
 	return (count+1)/2;
+	*/
 }
 
 void ShowAllFriends(char user[20], char friends[100][255], int* total, int* limit, int* choice) {
@@ -151,7 +165,10 @@ void ShowAllFriends(char user[20], char friends[100][255], int* total, int* limi
 	{
 		fgets(buff, 255, (FILE*)fp2);
 		buff[strlen(buff) - 1] = '\0';
-		strcpy(friends[i], buff);
+		if (!(friends[i] == NULL)) {
+			strcpy(friends[i], buff);
+		}
+		
 		i++;
 		buff[0] = '\0';
 	}
@@ -334,26 +351,47 @@ bool FriendExists(char user[20], char cmp_user[20]) {
 }
 
 bool AddFriend(char* cuser, char* user) {
-	/*[Remains to code]Check if friend already exists*/
 
 	//update cuser.friends file and user.friends file to add both as friend for each other
 	char cuserext[255]; // username with extension .friends
 	char userext[255];
+	char xcuser[50];
+	char xuser[50];
 	strcpy(cuserext, cuser);
 	strcpy(userext, user);
 	strcat(cuserext, ".friends");
 	strcat(userext, ".friends");
+	strcpy(xcuser, cuser);
+	strcpy(xuser, user);
+	//strcat(xuser, "\n");
+	//strcat(xcuser, "\n");
 	if (FriendExists(cuser, user)) {
 		return false;
 	}
 	else {
-		AppendFile(cuserext, user, true, true);
-		AppendFile(userext, cuser, true, true);
+		AppendFile(cuserext, xuser, true, true);
+		AppendFile(userext, xcuser, true, true);
 	}
 	return true;
 }
 
-
+int GetLastIdForWallPost(char user[50]) {
+	char test[100];
+	strcpy(test, "Data\\");
+	strcat(test, user);
+	strcat(test, ".wall");
+	FILE* fp = fopen(test, "r");
+	WallPostStruct p;
+	if (fp == NULL) {
+		return -1;
+	}
+	else {
+		fseek(fp, -sizeof(WallPostStruct), 2);
+		fread(&p, sizeof(p), 1, fp);
+	}
+	fclose(fp);
+	return p.PostId;
+}
 
 bool CreatePostOnWall(char walluser[50], char posteruser[50], char post[255]) {
 	
@@ -363,7 +401,7 @@ bool CreatePostOnWall(char walluser[50], char posteruser[50], char post[255]) {
 	strcat(test, ".wall");
 	WallPostStruct wallpost;
 	wallpost.Likes = 0;
-	wallpost.PostId = 0; /* Ill work on increment later*/
+	wallpost.PostId = GetLastIdForWallPost(walluser) + 1;
 	strcpy(wallpost.User, posteruser);
 	strcpy(wallpost.Post, post);
 	FILE* fp = fopen(test, "a");
@@ -377,15 +415,36 @@ bool CreatePostOnWall(char walluser[50], char posteruser[50], char post[255]) {
 	return true;
 }
 
-void DisplayWallPosts(char u[50]) {
+void DisplayWallPosts(char u[50], bool OwnProfile) {
 	int tpost = GetTotalWallPosts(u);
-	printf("%d posts on your wall!", tpost);
+	(OwnProfile) ? printf("%d posts on your wall!", tpost) : printf("%d posts on %s's wall!", tpost,u);
 	EqualLine(true, true);
 	//display posts
+	/*
 	for (int i = 0; i < (tpost * 2); i += 2) {
 		char user[20], post[255];
 		strcpy(user, u);
 		GetWallPost(i, user, post, tpost);
 		printf("%d. (%s) : \n%s\n", ((i / 2) + 10), user, post);
+	}
+	*/
+	char test[50];
+	strcpy(test, "Data\\");
+	strcat(test, u);
+	strcat(test, ".wall");
+	FILE* fp = fopen(test, "r");
+	WallPostStruct p;
+	if (fp == NULL) {
+		printf("Error reading wall data!");
+	}
+	else {
+		
+		int i = 1;
+		while (i <= tpost) {
+			fread(&p, sizeof(p), 1, fp);
+			printf("%d. (%s) : \n%s\n", i+9, p.User, p.Post);
+			i++;
+		}
+		
 	}
 }
