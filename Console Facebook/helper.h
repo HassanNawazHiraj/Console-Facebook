@@ -1,17 +1,9 @@
-struct Reply {
-	int ReplyId;
-	char user[20];
-	char reply[50];
-	int likes;
-};
-typedef struct Reply ReplyStruct;
+
 
 struct Comment {
 	int CommentId;
 	char user[20];
 	char comment[80];
-	int likes;
-	ReplyStruct CommentReply[5];
 };
 typedef struct Comment CommentStruct;
 static const CommentStruct EmptyCommentStruct = { 0 };
@@ -47,3 +39,7 @@ bool FriendExists(char[20], char[20]);
 void DisplayWallPosts(char[50], bool);
 bool CreatePostOnWall(char[50], char[50], char[255]);
 int GetLastIdForWallPost(char[50]);
+void PerformLike(int, char[50]);
+bool LikePost(int , char [50], char[50]);
+
+bool UserExistsForLikes(char [20], char [20], int );

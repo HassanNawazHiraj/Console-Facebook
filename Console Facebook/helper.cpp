@@ -31,7 +31,7 @@ void AppendFile(char* filename, char* data, bool idf, bool newline) {
 	
 	}
 	else {
-		strcat(test, filename);
+		strcpy(test, filename);
 	}
 	FILE *fp = NULL;
 	fp = fopen(test, "a");
@@ -313,7 +313,7 @@ bool FriendExists(char user[20], char cmp_user[20]) {
 	//int count = 0;
 
 	char buff[255];
-	char test[100] = "Data//";
+	char test[100] = "Data\\";
 	strcat(test, user);
 	strcat(test, ".friends");
 
@@ -331,6 +331,39 @@ bool FriendExists(char user[20], char cmp_user[20]) {
 	{
 		fgets(buff, 255, fp2);
 		if (strcmp(buff, cmp_user) == 0) {
+			fclose(fp2);
+			return true;
+		}
+	}
+	fclose(fp2);
+	return false;
+}
+
+bool UserExistsForLikes(char walluser[20], char liker[20], int num) {
+	//int count = 0;
+
+	char buff[255];
+	char test[100];
+	/*char test[100] = "Data\\";
+	strcat(test, user);
+	strcat(test, ".friends");*/
+	snprintf(test, sizeof(test),"Data\\%s.l%d", walluser, num);
+	if (!(FileExists(test, false))) {
+		CreateFile(test, "");
+		return false;
+	}
+
+
+	FILE *fp2;
+	fp2 = fopen(test, "r");
+	buff[0] = '\0';
+	//	char ch = ' ';
+
+	while (!feof(fp2))
+	{
+		fgets(buff, 255, fp2);
+		buff[strlen(buff) - 1] = '\0';
+		if (strcmp(buff, liker) == 0) {
 			fclose(fp2);
 			return true;
 		}
@@ -441,4 +474,59 @@ void DisplayWallPosts(char u[50], bool OwnProfile) {
 		}
 		
 	}
+}
+
+bool LikePost(int num, char userwall[50], char liker[50]) {
+	/* generate a username.lnum file to check if user already liked the said post*/
+	char test[100];
+	////strcpy(test, "Data\\");
+	////strcat(test, userwall);
+	//strcat(test, ".l");
+	//strcat(test, num);
+	snprintf(test, sizeof(test), "Data\\%s.l%d", userwall, num);
+	if (!(FileExists(test))) {
+		// can like
+		AppendFile(test, liker, false, true);
+		PerformLike(num, userwall);
+		return true;
+	}
+	else {
+		// check if user already liked!
+		if (UserExistsForLikes(userwall, liker, num)) {
+			return false;
+		}
+		else {
+			AppendFile(test, liker, false, true);
+			PerformLike(num, userwall);
+			return true;
+		}
+		//return false;
+	}
+
+}
+
+void PerformLike(int num, char userwall[50]) {
+	WallPostStruct w;
+	char test[100];
+	snprintf(test, sizeof(test), "Data\\%s.wall", userwall, num);
+	FILE* fp = fopen(test, "r+");
+	if (fp == NULL) {
+		printf("Error while liking the post");
+	}
+	else {
+		/*for (int i = 0; i <= num; i++) {
+
+			if (i == num) {
+
+			}
+		}*/
+		fseek(fp, (num * sizeof(w))+num, 0);
+		fread(&w, sizeof(w), 1, fp);
+	//	printf("%s \n %s", w.User, w.Post);
+		rewind(fp);
+		fseek(fp, (num * sizeof(w))+num, 0);
+		w.Likes += 1;
+		fwrite(&w, sizeof(w), 1, fp);
+	}
+	fclose(fp);
 }

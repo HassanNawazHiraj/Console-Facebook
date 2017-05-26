@@ -18,7 +18,7 @@ void AboutPage();
 void HomepageMenu(int);
 void ProfilePage(int);
 void ProfilePageMenu(int, int);
-void ShowPost(char[50], int);
+void ShowPost(char[50], int, int);
 void FriendsPage();
 void FriendsPageMenu(int);
 void SearchPage(int);
@@ -28,7 +28,7 @@ void ViewFriends(char[100][255], int, int, int);
 void ViewFriendProfile(char[20],int);
 void PostOnWall(char[50]);
 void ViewFriendProfileMenu(int, char[50], int);
-void ShowPostMenu(int, char[50]);
+void ShowPostMenu(int, char[50], int);
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -258,7 +258,7 @@ void ProfilePageMenu(int x, int max_post) {
 
 	default :
 		if (x >= 10 && x < max_post) {
-			ShowPost(Cusername,x);
+			ShowPost(Cusername,x,0);
 		}
 		else {
 			ProfilePage(1);
@@ -270,8 +270,19 @@ void ProfilePageMenu(int x, int max_post) {
 	}
 }
 
-void ShowPost(char userwall[50], int num) {
+void ShowPost(char userwall[50], int num, int MsgCode) {
 	clearscreen();
+	switch (MsgCode) {
+	case 1:
+		EqualLineText("Post Liked!");
+		NewLine();
+		break;
+	case 2:
+		EqualLineText("You Already Liked this post");
+		NewLine();
+		
+		break;
+	}
 	char user[20], post[255]; int tpost = GetTotalWallPosts(userwall);
 	strcpy(user, userwall);
 	char poster[50]; int likes;
@@ -294,19 +305,25 @@ void ShowPost(char userwall[50], int num) {
 	strcpy_s(ArrMenu[1], "Like this post");
 	strcpy_s(ArrMenu[2], "Go back");
 	strcpy_s(ArrMenu[3], "Exit");
-	ShowPostMenu(CreateMenu(ArrMenu[0], 4, 50, true, true), userwall);
+	ShowPostMenu(CreateMenu(ArrMenu[0], 4, 50, true, true), userwall, num);
 
 
 }
 
-void ShowPostMenu(int x, char user[50]) {
+void ShowPostMenu(int x, char user[50], int num) {
 	switch (x) {
 	case 1:
 
 		break;
 
 	case 2:
-
+		if (LikePost(num - 10, user, Cusername)) {
+			ShowPost(user, num, 1);
+		}
+		else {
+			ShowPost(user, num, 2);
+		}
+		//printf("exec");
 		break;
 
 	case 3:
@@ -506,7 +523,7 @@ void ViewFriendProfileMenu(int x, char u[50], int max_post) {
 		break;
 	default:
 		if (x >= 10 && x < max_post) {
-			ShowPost(u,x);
+			ShowPost(u,x,0);
 		}
 		else {
 			ViewFriendProfile(u,1);
