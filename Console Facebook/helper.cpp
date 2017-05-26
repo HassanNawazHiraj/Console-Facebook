@@ -408,7 +408,7 @@ int GetLastIdForWallPost(char user[50]) {
 		return -1;
 	}
 	else {
-		fseek(fp, -sizeof(WallPostStruct), 2);
+		fseek(fp, -sizeof(WallPostStruct)-1, SEEK_END);
 		fread(&p, sizeof(p), 1, fp);
 	}
 	fclose(fp);
@@ -504,8 +504,8 @@ void DisplayWallPosts(char u[50], bool OwnProfile) {
 	else {
 		
 		int i = 1;
-		while (i <= tpost) {
-			fread(&p, sizeof(p), 1, fp);
+		while (fread(&p, sizeof(p), 1, fp)) {
+			
 			printf("%d. (%s) : \n%s\n", i+9, p.User, p.Post);
 			i++;
 		}

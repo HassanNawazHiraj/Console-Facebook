@@ -234,12 +234,13 @@ void ProfilePage(int MsgCode = 0) {
 
 	EqualLine(true, true);
 	int tpost = GetTotalWallPosts(Cusername);
-	char ArrMenu[4][50];
+	char ArrMenu[5][50];
 	strcpy_s(ArrMenu[0], "Post on your profile");
 	strcpy_s(ArrMenu[1], "see your friends");
 	strcpy_s(ArrMenu[2], "search someone");
-	strcpy_s(ArrMenu[3], "Exit");
-	ProfilePageMenu(CreateMenu(ArrMenu[0], 4, 50, true, true), tpost+10);
+	strcpy_s(ArrMenu[3], "Logout");
+	strcpy_s(ArrMenu[4], "Exit");
+	ProfilePageMenu(CreateMenu(ArrMenu[0], 5, 50, true, true), tpost+10);
 }
 
 void ProfilePageMenu(int x, int max_post) {
@@ -258,6 +259,13 @@ void ProfilePageMenu(int x, int max_post) {
 		break;
 
 	case 4:
+		strcpy(Cusername, "");
+		strcpy(Cname, "");
+		strcpy(Cemail, "");
+		Homepage(0);
+		break;
+
+	case 5:
 		exit(EXIT_FAILURE);
 		break;
 
@@ -310,7 +318,7 @@ void ShowPost(char userwall[50], int num, int MsgCode) {
 			}
 			else {
 				// read comments
-				printf("%s : \n%s", c[j].user, c[j].comment);
+				printf("%s : \n%s\n", c[j].user, c[j].comment);
 			}
 			j++;
 		}
