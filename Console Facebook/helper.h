@@ -41,5 +41,5 @@ bool CreatePostOnWall(char[50], char[50], char[255]);
 int GetLastIdForWallPost(char[50]);
 void PerformLike(int, char[50]);
 bool LikePost(int , char [50], char[50]);
-
+bool CreateCommentOnPost(char[50], char[50], char[80], int);
 bool UserExistsForLikes(char [20], char [20], int );

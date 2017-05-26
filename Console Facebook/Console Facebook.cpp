@@ -29,6 +29,7 @@ void ViewFriendProfile(char[20],int);
 void PostOnWall(char[50]);
 void ViewFriendProfileMenu(int, char[50], int);
 void ShowPostMenu(int, char[50], int);
+void PostCommentOnWall(char [50], int );
 static char Cname[50];
 static char Cemail[50];
 static char Cusername[50];
@@ -215,6 +216,10 @@ void ProfilePage(int MsgCode = 0) {
 		EqualLineText("Post created on your wall!");
 		NewLine();
 	}
+	if (MsgCode == 5) {
+		EqualLineText("Comment Posted!");
+		NewLine();
+	}
 	EqualLine(false, true); printf("%s - %s's profile", AppTitle, Cname); EqualLine(true, true);
 	char test[100] = "Data//";
 	strcat(test, Cusername);
@@ -292,13 +297,25 @@ void ShowPost(char userwall[50], int num, int MsgCode) {
 	printf("%s (%d likes) : \n%s", poster,likes, post);
 	EqualLine(true, true);
 	// Comments & replies
-	
-	if ((strcmp(c[0].user,"") == 0)  &&  (strcmp(c[0].comment,"") == 0) ) {
+	int j = 0;
+
+
+	if ((strcmp(c[0].user, "") == 0) && (strcmp(c[0].comment, "") == 0)) {
 		printf("No Comments on this post");
 	}
 	else {
-		// read comments
+		while (j <= 4) {
+			if ((strcmp(c[j].user, "") == 0) && (strcmp(c[j].comment, "") == 0)) {
+				
+			}
+			else {
+				// read comments
+				printf("%s : \n%s", c[j].user, c[j].comment);
+			}
+			j++;
+		}
 	}
+
 	EqualLine(true, true);
 	char ArrMenu[4][50];
 	strcpy_s(ArrMenu[0], "Comment on this post");
@@ -313,7 +330,7 @@ void ShowPost(char userwall[50], int num, int MsgCode) {
 void ShowPostMenu(int x, char user[50], int num) {
 	switch (x) {
 	case 1:
-
+		PostCommentOnWall(user, num);
 		break;
 
 	case 2:
@@ -336,6 +353,8 @@ void ShowPostMenu(int x, char user[50], int num) {
 
 	}
 }
+
+
 
 void FriendsPage() {
 	clearscreen();
@@ -477,6 +496,10 @@ void ViewFriendProfile(char user[20], int MsgCode=0) {
 		EqualLineText("Post Created!");
 		NewLine();
 	}
+	if (MsgCode == 3) {
+		EqualLineText("Comment Posted!");
+		NewLine();
+	}
 	
 	EqualLine(false, true); printf("%s - %s's profile (your friend)", AppTitle, user); EqualLine(true, false);
 	char test[100] = "Data//";
@@ -547,5 +570,22 @@ void PostOnWall(char u[50]) {
 	}
 	else {
 		ViewFriendProfile(u, 2);
+	}
+}
+
+void PostCommentOnWall(char u[50], int num) {
+	char comment[80];
+	clearscreen();
+	EqualLine(false, true); printf("Comment on %s's Post!", u); EqualLine(true, true);
+	printf("Enter your Comment (80 max) : ");
+	fgets(comment, 80, stdin);
+	//CreatePostOnWall(u, Cusername, post);
+	CreateCommentOnPost(u, Cusername, comment, num-10);
+	if (strcmp(u, Cusername) == 0) {
+		ShowPost(u, num, 0);
+	}
+	else {
+		//ViewFriendProfile(u, 3);
+		ShowPost(u, num, 0);
 	}
 }

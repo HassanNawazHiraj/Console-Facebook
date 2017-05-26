@@ -442,6 +442,43 @@ bool CreatePostOnWall(char walluser[50], char posteruser[50], char post[255]) {
 	return true;
 }
 
+bool CreateCommentOnPost(char walluser[50], char posteruser[50], char comment[80], int num) {
+	char test[100];
+	/*strcpy(test, "Data\\");
+	strcat(test, walluser);
+	strcat(test, ".wall");*/
+	snprintf(test, sizeof(test), "Data\\%s.wall", walluser);
+	WallPostStruct wallpost;
+	//wallpost.Likes = 0;
+	//wallpost.PostId = GetLastIdForWallPost(walluser) + 1;
+	//inilize struct for checking later
+//	for (int i = 0; i < 10; i++) {
+	//	wallpost.comments[i] = EmptyCommentStruct;
+	//}
+
+	//strcpy(wallpost.User, posteruser);
+	//strcpy(wallpost.Post, post);
+	FILE* fp = fopen(test, "r+");
+	if (fp == NULL) {
+		return false;
+	}
+	
+	fseek(fp, (num * sizeof(wallpost)) + num, 0);
+	fread(&wallpost, sizeof(wallpost), 1, fp);
+	int j = 0;
+	while (!(((strcmp(wallpost.comments[j].comment, "") == 0)) && (strcmp(wallpost.comments[j].user, "") == 0))) {
+	j++;
+	}
+	//j--;
+	strcpy(wallpost.comments[j].user, posteruser);
+	strcpy(wallpost.comments[j].comment, comment);
+	rewind(fp);
+	fseek(fp, (num * sizeof(wallpost)) + num, 0);
+	fwrite(&wallpost, sizeof(wallpost), 1, fp);
+	fclose(fp);
+	return true;
+}
+
 void DisplayWallPosts(char u[50], bool OwnProfile) {
 	int tpost = GetTotalWallPosts(u);
 	(OwnProfile) ? printf("%d posts on your wall!", tpost) : printf("%d posts on %s's wall!", tpost,u);
