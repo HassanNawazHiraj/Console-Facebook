@@ -11,6 +11,7 @@ struct UserData {
 } ud;
 
 char AppTitle[] = "Zalim Community";
+float AppVersion = 0.5;
 void Homepage(int);
 void RegisterPage(int);
 void LoginPage(int);
@@ -53,7 +54,7 @@ void AboutPage() {
 	
 	printf("Program Created By :\t Hasasn Nawaz");
 	NewLine();
-	printf("Version : 0.1 beta");
+	printf("Version : %.1f beta", AppVersion);
 	EqualLine(true, true);
 	char Menu[2][10];
 	strcpy_s(Menu[0], "Go Back");
@@ -478,9 +479,9 @@ void AddFriendMenu(int x, char user[20]) {
 }
 
 void ViewFriends(char friends[100][255], int total, int limit, int choice) {
-	printf("\n%d,%d,%d", total, limit, choice);
+//	printf("\n%d,%d,%d", total, limit, choice);
 	for (int i = 0; i < (total - 3); i++) {
-		ViewFriendProfile(friends[i],0);
+		if(i+1 == choice) ViewFriendProfile(friends[i],0);
 	}
 	if (choice == (total - 2)) {
 		SearchPage(0);

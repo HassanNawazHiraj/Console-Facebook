@@ -167,7 +167,7 @@ void ShowAllFriends(char user[20], char friends[100][255], int* total, int* limi
 	strcpy(friends[i+1], "go back");
 	strcpy(friends[i+2], "exit");
 	
-	*total = i + 3;
+	*total = i+3;
 	*limit = 255;
 	*choice = CreateMenu(friends[0], i + 3, 255, true, false);
 	
