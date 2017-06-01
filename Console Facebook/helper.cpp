@@ -330,6 +330,7 @@ bool FriendExists(char user[20], char cmp_user[20]) {
 	while (!feof(fp2))
 	{
 		fgets(buff, 255, fp2);
+		if (buff[strlen(buff) - 1] == '\n') buff[strlen(buff) - 1] = '\0';
 		if (strcmp(buff, cmp_user) == 0) {
 			fclose(fp2);
 			return true;
