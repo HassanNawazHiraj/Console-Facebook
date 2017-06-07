@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <string>
 #include <iostream>
-
-
+#include <windows.h>
 
 
 /*
@@ -15,7 +14,7 @@ void NewLine() {
 	printf("\n");
 }
 
-void CreateFile(char* filename, char* data) {
+void CreateFile1(char* filename, char* data) {
 
 	FILE *fp = NULL;
 	fp = fopen(filename, "w");
@@ -183,7 +182,7 @@ int GetTotalFriends(char user[20]) {
 	strcat(test, ".friends");
 
 	if (!(FileExists(test, false))) {
-		CreateFile(test, "");
+		CreateFile1(test, "");
 	}
 
 
@@ -239,6 +238,7 @@ void EqualLineText(char* x) {
 
 int CreateMenu(char* x,int limit,int total, bool NewLineBefore=true, bool IgnoreAdditionalChoice = false) {
 	if (NewLineBefore) NewLine();
+	WhiteColor(false);
 	for (int i = 0; i < limit; i++) {
 		printf("%d. %s\n", i+1,(x + (i * total)));
 	}
@@ -318,7 +318,7 @@ bool FriendExists(char user[20], char cmp_user[20]) {
 	strcat(test, ".friends");
 
 	if (!(FileExists(test, false))) {
-		CreateFile(test, "");
+		CreateFile1(test, "");
 	}
 
 
@@ -350,7 +350,7 @@ bool UserExistsForLikes(char walluser[20], char liker[20], int num) {
 	strcat(test, ".friends");*/
 	snprintf(test, sizeof(test),"Data\\%s.l%d", walluser, num);
 	if (!(FileExists(test, false))) {
-		CreateFile(test, "");
+		CreateFile1(test, "");
 		return false;
 	}
 
@@ -484,6 +484,7 @@ void DisplayWallPosts(char u[50], bool OwnProfile) {
 	int tpost = GetTotalWallPosts(u);
 	(OwnProfile) ? printf("%d posts on your wall!", tpost) : printf("%d posts on %s's wall!", tpost,u);
 	EqualLine(true, true);
+	WhiteColor(true);
 	//display posts
 	/*
 	for (int i = 0; i < (tpost * 2); i += 2) {
@@ -507,7 +508,10 @@ void DisplayWallPosts(char u[50], bool OwnProfile) {
 		int i = 1;
 		while (fread(&p, sizeof(p), 1, fp)) {
 			
-			printf("%d. (%s) : \n%s\n", i+9, p.User, p.Post);
+			printf("%d. (%s) : \n", i+9, p.User);
+			WhiteColor(false);
+			printf("%s\n", p.Post);
+			WhiteColor(true);
 			i++;
 		}
 		
@@ -567,4 +571,49 @@ void PerformLike(int num, char userwall[50]) {
 		fwrite(&w, sizeof(w), 1, fp);
 	}
 	fclose(fp);
+}
+
+
+/* Color Functions*/
+
+void ZalimColor() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE |
+		FOREGROUND_GREEN |
+		FOREGROUND_INTENSITY
+
+	);
+}
+
+void WhiteColor(bool x) {
+	if (x) {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE |
+			FOREGROUND_GREEN |
+			FOREGROUND_RED |
+			FOREGROUND_INTENSITY
+		);
+	}
+	else {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE |
+			FOREGROUND_GREEN |
+			FOREGROUND_RED 
+		);
+	}
+}
+
+void InfoTextColor() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN |
+		FOREGROUND_RED
+	);
+}
+
+void ErrorColor() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED |
+		FOREGROUND_INTENSITY
+	);
+}
+
+void SuccessColor() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN |
+		FOREGROUND_INTENSITY
+	);
 }

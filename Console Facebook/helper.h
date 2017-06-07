@@ -17,6 +17,9 @@ struct WallPost
 };
 typedef struct WallPost WallPostStruct;
 
+
+
+
 void NewLine();
 void EqualLine(bool , bool );
 const char * EqualLineReturn();
@@ -25,7 +28,7 @@ void EqualLineText(char*);
 int CreateMenu(char* , int , int , bool, bool);
 void clearscreen();
 void MultiInputs(char*, char*, int, int , bool);
-void CreateFile(char*,char*);
+void CreateFile1(char*,char*);
 void AppendFile(char*, char*, bool, bool);
 int FileExists(char*, bool);
 void Login(char*, char [3][50]);
@@ -43,3 +46,8 @@ void PerformLike(int, char[50]);
 bool LikePost(int , char [50], char[50]);
 bool CreateCommentOnPost(char[50], char[50], char[80], int);
 bool UserExistsForLikes(char [20], char [20], int );
+void ZalimColor();
+void WhiteColor(bool);
+void InfoTextColor();
+void ErrorColor();
+void SuccessColor();

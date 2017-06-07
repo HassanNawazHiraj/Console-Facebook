@@ -2,7 +2,6 @@
 #include "helper.h"
 #include <string.h>
 #include <stdlib.h>
-
 struct UserData {
 	char username[50];
 	char password[50];
@@ -36,7 +35,7 @@ static char Cemail[50];
 static char Cusername[50];
 int main()
 {
-	
+	//system("color F9");
 	Homepage(0);
 	
 	//fflush(stdin);
@@ -50,7 +49,7 @@ void AboutPage() {
 	//CreatePostOnWall("hassan", "Ali", "Hello");
 	//printf("|%d|", GetLastIdForWallPost("test"));
 	//printf("|%ld|", GetTotalWallPosts("hassan"));
-	EqualLine(false,true); printf("%s %s", AppTitle, "- About"); EqualLine(true,true);
+	ZalimColor(); EqualLine(false, true); printf("%s %s", AppTitle, "- About"); EqualLine(true, true); WhiteColor(true);
 	
 	printf("Program Created By :\t Hasasn Nawaz");
 	NewLine();
@@ -68,10 +67,12 @@ void LoginPage(int ErrorCode=0) {
 	struct UserData returndata;
 	clearscreen();
 	if (ErrorCode == 1) {
+		ErrorColor();
 		EqualLineText("Error - Wrong Username/Password");
+		WhiteColor(true);
 		NewLine();
 	}
-	EqualLine(false, true); printf("%s %s", AppTitle, "- Login"); EqualLine(true, true);
+	ZalimColor(); EqualLine(false, true); printf("%s %s", AppTitle, "- Login"); EqualLine(true, true); WhiteColor(true);
 	NewLine();
 	char ArrLogin[2][50];
 	char ArrResult[2][50];
@@ -115,10 +116,10 @@ void RegisterPage(int ErrorCode = 0) {
 	clearscreen();
 	if (ErrorCode == 1) {
 
-		EqualLineText("Error - Username already exists");
+		ErrorColor(); EqualLineText("Error - Username already exists"); WhiteColor(true);
 		NewLine();
 	}
-	EqualLine(false, true); printf("%s %s", AppTitle, "- Register"); EqualLine(true, true);
+	ZalimColor(); EqualLine(false, true); printf("%s %s", AppTitle, "- Register"); EqualLine(true, true); WhiteColor(true);
 
 	NewLine();
 	char ArrRegister[4][50];
@@ -153,7 +154,7 @@ void RegisterPage(int ErrorCode = 0) {
 
 	sprintf_s(data, "%s\n%s\n%s", userdata.password, userdata.name, userdata.email);
 
-	CreateFile(test, data);
+	CreateFile1(test, data);
 	//getchar();
 	Homepage(1);
 	}
@@ -183,11 +184,14 @@ void Homepage(int MsgCode = 0) {
 	clearscreen();
 
 	if (MsgCode == 1) {
-		EqualLineText("User created successfully!");
+		SuccessColor(); EqualLineText("User created successfully!"); WhiteColor(true);
 		NewLine();
 	}
 
+
+	ZalimColor();
 	EqualLineText(AppTitle);
+	WhiteColor(true);
 	//Defining Menu
 	char ArrMenu[4][50];
 	strcpy_s(ArrMenu[0], "Create a new account");
@@ -202,38 +206,42 @@ void ProfilePage(int MsgCode = 0) {
 	clearscreen();
 	if (MsgCode == 1) {
 
-		EqualLineText("Error - Invalid Choice");
+		ErrorColor(); EqualLineText("Error - Invalid Choice"); WhiteColor(true);
 		NewLine();
 	}
 	if (MsgCode == 2) {
-		EqualLineText("User added as your friend");
+		SuccessColor(); EqualLineText("User added as your friend"); WhiteColor(true);
 		NewLine();
 	}
 	if (MsgCode == 3) {
-		EqualLineText("You already are friends with this user");
+		InfoTextColor(); EqualLineText("You already are friends with this user"); WhiteColor(true);
 		NewLine();
 	}
 	if (MsgCode == 4) {
-		EqualLineText("Post created on your wall!");
+		SuccessColor(); EqualLineText("Post created on your wall!"); WhiteColor(true);
 		NewLine();
 	}
 	if (MsgCode == 5) {
-		EqualLineText("Comment Posted!");
+		SuccessColor(); EqualLineText("Comment Posted!"); WhiteColor(true);
 		NewLine();
 	}
+	ZalimColor();
 	EqualLine(false, true); printf("%s - %s's profile", AppTitle, Cname); EqualLine(true, true);
+	WhiteColor(true);
 	char test[100] = "Data//";
 	strcat(test, Cusername);
 	strcat(test, ".wall");
-	
+	InfoTextColor();
+	EqualLine(false, true);
 	if (!(FileExists(test, false))) {
-		printf("No posts on your wall!");
+		 printf("No posts on your wall!");
 	}
 	else {
 		DisplayWallPosts(Cusername, true);
 	}
 
 	EqualLine(true, true);
+	WhiteColor(true);
 	int tpost = GetTotalWallPosts(Cusername);
 	char ArrMenu[5][50];
 	strcpy_s(ArrMenu[0], "Post on your profile");
@@ -250,7 +258,6 @@ void ProfilePageMenu(int x, int max_post) {
 	case 1:
 		PostOnWall(Cusername);
 		break;
-
 	case 2:
 		FriendsPage();
 		break;
@@ -288,11 +295,11 @@ void ShowPost(char userwall[50], int num, int MsgCode) {
 	clearscreen();
 	switch (MsgCode) {
 	case 1:
-		EqualLineText("Post Liked!");
+		SuccessColor(); EqualLineText("Post Liked!"); WhiteColor(true);
 		NewLine();
 		break;
 	case 2:
-		EqualLineText("You Already Liked this post");
+		InfoTextColor(); EqualLineText("You Already Liked this post"); WhiteColor(true);
 		NewLine();
 		
 		break;
@@ -302,15 +309,18 @@ void ShowPost(char userwall[50], int num, int MsgCode) {
 	char poster[50]; int likes;
 	CommentStruct c[10];
 	GetWallPost(num-10, user, poster, post, tpost, &likes, c);
+	ZalimColor();
 	EqualLine(false, true); (strcmp(Cusername, userwall) == 0) ? printf("Viewing %s's post on your profile", poster) : printf("Viewing %s's post on %s's profile", poster, userwall); EqualLine(true, true);
-	printf("%s (%d likes) : \n%s", poster,likes, post);
+	WhiteColor(true);
+	printf("%s (%d likes) : \n", poster,likes);
+	WhiteColor(false); printf("%s", post); WhiteColor(true);
 	EqualLine(true, true);
 	// Comments & replies
 	int j = 0;
 
 
 	if ((strcmp(c[0].user, "") == 0) && (strcmp(c[0].comment, "") == 0)) {
-		printf("No Comments on this post");
+		InfoTextColor(); printf("No Comments on this post"); WhiteColor(true);
 	}
 	else {
 		while (j <= 4) {
@@ -319,7 +329,8 @@ void ShowPost(char userwall[50], int num, int MsgCode) {
 			}
 			else {
 				// read comments
-				printf("%s : \n%s\n", c[j].user, c[j].comment);
+				printf("%s : \n", c[j].user);
+				WhiteColor(false); printf("%s\n", c[j].comment); WhiteColor(true);
 			}
 			j++;
 		}
@@ -368,9 +379,9 @@ void ShowPostMenu(int x, char user[50], int num) {
 void FriendsPage() {
 	clearscreen();
 	int tf = GetTotalFriends(Cusername);
-	EqualLine(false, true); printf("%s's Friends (%d)", Cname, tf); EqualLine(true, true);
+	ZalimColor(); EqualLine(false, true); printf("%s's Friends (%d)", Cname, tf); EqualLine(true, true); WhiteColor(true);
 	if (tf == 0) {
-		printf("You don't have any friends :(");
+		InfoTextColor();  WhiteColor(false);  printf("You don't have any friends :(");
 		EqualLine(true, true);
 	
 	char ArrMenu[3][50];
@@ -406,12 +417,13 @@ void SearchPage(int x = 0) {
 	clearscreen();
 	switch (x) {
 	case 1:
-		EqualLine(false, true);
-		printf("You can't search yourself!");
-		NewLine();
+		//EqualLine(false, true);
+		//printf("");
+		//NewLine();
+		ErrorColor();  EqualLineText("You can't search yourself!"); WhiteColor(true);
 		break;
 	}
-	EqualLine(false, true); printf("Zalim Community - Search"); EqualLine(true, true);
+	ZalimColor(); EqualLine(false, true); printf("Zalim Community - Search"); EqualLine(true, true); WhiteColor(true);
 	char user[20];
 	printf("Enter Name : ");
 	fflush(stdin);
@@ -433,7 +445,7 @@ void SearchPage(int x = 0) {
 		
 	}
 	else {
-	printf("No Such User");
+		ErrorColor();  printf("No Such User"); WhiteColor(true);
 	EqualLine(true, true);
 	char ArrMenu[3][50];
 	strcpy_s(ArrMenu[0], "Search Again");
@@ -498,25 +510,27 @@ void ViewFriendProfile(char user[20], int MsgCode=0) {
 	clearscreen();
 	if (MsgCode == 1) {
 
-		EqualLineText("Error - Invalid Choice");
+		ErrorColor();  EqualLineText("Error - Invalid Choice"); WhiteColor(true);
 		NewLine();
 	}
 	if (MsgCode == 2) {
-		EqualLineText("Post Created!");
+		SuccessColor(); EqualLineText("Post Created!"); WhiteColor(true);
 		NewLine();
 	}
 	if (MsgCode == 3) {
-		EqualLineText("Comment Posted!");
+		SuccessColor(); EqualLineText("Comment Posted!"); WhiteColor(true);
 		NewLine();
 	}
 	
-	EqualLine(false, true); printf("%s - %s's profile (your friend)", AppTitle, user); EqualLine(true, false);
+	ZalimColor(); EqualLine(false, true); printf("%s - %s's profile (your friend)", AppTitle, user); EqualLine(true, false); WhiteColor(true);
 	char test[100] = "Data//";
 	strcat(test, user);
 	strcat(test, ".wall");	
 	int i = 0;
 	if (!(FileExists(test, false))) {
+		InfoTextColor();
 		printf("\nNo posts on %s's wall!", user);
+		WhiteColor(true);
 	}
 	else {
 		int tpost = GetTotalWallPosts(user);
@@ -570,7 +584,7 @@ void ViewFriendProfileMenu(int x, char u[50], int max_post) {
 void PostOnWall(char u[50]) {
 	char post[255];
 	clearscreen();
-	EqualLine(false, true); printf("Post on %s's Profile!", u); EqualLine(true, true);
+	ZalimColor(); EqualLine(false, true); printf("Post on %s's Profile!", u); EqualLine(true, true); WhiteColor(true);
 	printf("Enter your post (255 max) : ");
 	fgets(post, 255, stdin);
 	CreatePostOnWall(u, Cusername, post);
@@ -585,7 +599,7 @@ void PostOnWall(char u[50]) {
 void PostCommentOnWall(char u[50], int num) {
 	char comment[80];
 	clearscreen();
-	EqualLine(false, true); printf("Comment on %s's Post!", u); EqualLine(true, true);
+	ZalimColor(); EqualLine(false, true); printf("Comment on %s's Post!", u); EqualLine(true, true); WhiteColor(true);
 	printf("Enter your Comment (80 max) : ");
 	fgets(comment, 80, stdin);
 	//CreatePostOnWall(u, Cusername, post);
