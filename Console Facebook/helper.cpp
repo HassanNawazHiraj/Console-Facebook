@@ -254,7 +254,8 @@ int CreateMenu(char* x,int limit,int total, bool NewLineBefore=true, bool Ignore
 			flag = false;
 		}
 		else {
-			printf("Invalid Option, Please Try Again\n");
+
+			ErrorColor();  printf("Invalid Option, Please Try Again\n"); WhiteColor(false);
 		
 	}
 	}
@@ -481,8 +482,11 @@ bool CreateCommentOnPost(char walluser[50], char posteruser[50], char comment[80
 }
 
 void DisplayWallPosts(char u[50], bool OwnProfile) {
+
 	int tpost = GetTotalWallPosts(u);
-	(OwnProfile) ? printf("%d posts on your wall!", tpost) : printf("%d posts on %s's wall!", tpost,u);
+	InfoTextColor();
+	EqualLine(false, true);
+	(OwnProfile) ? printf("%d posts on your wall!", tpost) : printf("%d posts on %s's wall!", tpost, u);
 	EqualLine(true, true);
 	WhiteColor(true);
 	//display posts
@@ -501,7 +505,7 @@ void DisplayWallPosts(char u[50], bool OwnProfile) {
 	FILE* fp = fopen(test, "r");
 	WallPostStruct p;
 	if (fp == NULL) {
-		printf("Error reading wall data!");
+		ErrorColor(); printf("Error reading wall data!"); WhiteColor(true);
 	}
 	else {
 		
@@ -553,7 +557,7 @@ void PerformLike(int num, char userwall[50]) {
 	snprintf(test, sizeof(test), "Data\\%s.wall", userwall, num);
 	FILE* fp = fopen(test, "r+");
 	if (fp == NULL) {
-		printf("Error while liking the post");
+		ErrorColor(); printf("Error while liking the post"); WhiteColor(true);
 	}
 	else {
 		/*for (int i = 0; i <= num; i++) {

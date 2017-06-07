@@ -232,8 +232,9 @@ void ProfilePage(int MsgCode = 0) {
 	strcat(test, Cusername);
 	strcat(test, ".wall");
 	InfoTextColor();
-	EqualLine(false, true);
 	if (!(FileExists(test, false))) {
+
+		EqualLine(false, true);
 		 printf("No posts on your wall!");
 	}
 	else {
@@ -522,7 +523,7 @@ void ViewFriendProfile(char user[20], int MsgCode=0) {
 		NewLine();
 	}
 	
-	ZalimColor(); EqualLine(false, true); printf("%s - %s's profile (your friend)", AppTitle, user); EqualLine(true, false); WhiteColor(true);
+	ZalimColor(); EqualLine(false, true); printf("%s - %s's profile (your friend)", AppTitle, user); EqualLine(true, true); WhiteColor(true);
 	char test[100] = "Data//";
 	strcat(test, user);
 	strcat(test, ".wall");	
@@ -535,7 +536,7 @@ void ViewFriendProfile(char user[20], int MsgCode=0) {
 	else {
 		int tpost = GetTotalWallPosts(user);
 	//	printf("%d posts on %s's wall!", tpost, user);
-		EqualLine(true, true);
+		
 		//display posts
 		//for (i = 0; i < (tpost * 2); i += 2) {
 		//	char  u[20],post[255];
