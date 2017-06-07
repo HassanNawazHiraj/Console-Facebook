@@ -382,7 +382,7 @@ void FriendsPage() {
 	int tf = GetTotalFriends(Cusername);
 	ZalimColor(); EqualLine(false, true); printf("%s's Friends (%d)", Cname, tf); EqualLine(true, true); WhiteColor(true);
 	if (tf == 0) {
-		InfoTextColor();  WhiteColor(false);  printf("You don't have any friends :(");
+		InfoTextColor();  printf("You don't have any friends :("); WhiteColor(false);
 		EqualLine(true, true);
 	
 	char ArrMenu[3][50];
