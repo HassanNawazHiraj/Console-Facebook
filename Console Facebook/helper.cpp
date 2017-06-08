@@ -5,7 +5,6 @@
 #include <iostream>
 #include <windows.h>
 
-
 /*
 Used to display New Line
 */
@@ -135,6 +134,7 @@ int GetTotalWallPosts(char user[20]) {
 	fclose(fp2);
 	return (count+1)/2;
 	*/
+	fclose(fp2);
 }
 
 void ShowAllFriends(char user[20], char friends[100][255], int* total, int* limit, int* choice) {
@@ -520,6 +520,7 @@ void DisplayWallPosts(char u[50], bool OwnProfile) {
 		}
 		
 	}
+	fclose(fp);
 }
 
 bool LikePost(int num, char userwall[50], char liker[50]) {
@@ -620,4 +621,12 @@ void SuccessColor() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN |
 		FOREGROUND_INTENSITY
 	);
+}
+
+void DeleteAccount(char user[50]) {
+	char files[100];
+	snprintf(files, 100, "del Data\\%s.*", user);
+	//printf("%s", files);
+	//getchar();
+	system(files);
 }

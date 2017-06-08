@@ -188,6 +188,11 @@ void Homepage(int MsgCode = 0) {
 		NewLine();
 	}
 
+	if (MsgCode == 2) {
+		SuccessColor(); EqualLineText("Your Account was deleted successfully!"); WhiteColor(true);
+		NewLine();
+	}
+
 
 	ZalimColor();
 	EqualLineText(AppTitle);
@@ -248,8 +253,9 @@ void ProfilePage(int MsgCode = 0) {
 	strcpy_s(ArrMenu[0], "Post on your profile");
 	strcpy_s(ArrMenu[1], "see your friends");
 	strcpy_s(ArrMenu[2], "search someone");
-	strcpy_s(ArrMenu[3], "Logout");
-	strcpy_s(ArrMenu[4], "Exit");
+	strcpy_s(ArrMenu[3], "Delete Account");
+	strcpy_s(ArrMenu[4], "Logout");
+	strcpy_s(ArrMenu[5], "Exit");
 	ProfilePageMenu(CreateMenu(ArrMenu[0], 5, 50, true, true), tpost+10);
 }
 
@@ -268,13 +274,21 @@ void ProfilePageMenu(int x, int max_post) {
 		break;
 
 	case 4:
+		DeleteAccount(Cusername);
+		strcpy(Cusername, "");
+		strcpy(Cname, "");
+		strcpy(Cemail, "");
+		Homepage(2);
+		break;
+
+	case 5:
 		strcpy(Cusername, "");
 		strcpy(Cname, "");
 		strcpy(Cemail, "");
 		Homepage(0);
 		break;
 
-	case 5:
+	case 6:
 		exit(EXIT_FAILURE);
 		break;
 

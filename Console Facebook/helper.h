@@ -51,3 +51,4 @@ void WhiteColor(bool);
 void InfoTextColor();
 void ErrorColor();
 void SuccessColor();
+void DeleteAccount(char[50]);
