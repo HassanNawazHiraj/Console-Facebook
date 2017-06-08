@@ -52,3 +52,4 @@ void InfoTextColor();
 void ErrorColor();
 void SuccessColor();
 void DeleteAccount(char[50]);
+void DeletePost(char[50], int);

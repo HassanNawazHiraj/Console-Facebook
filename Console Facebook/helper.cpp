@@ -630,3 +630,7 @@ void DeleteAccount(char user[50]) {
 	//getchar();
 	system(files);
 }
+
+void DeletePost(char user[50], int num) {
+
+}

@@ -192,6 +192,9 @@ void Homepage(int MsgCode = 0) {
 		SuccessColor(); EqualLineText("Your Account was deleted successfully!"); WhiteColor(true);
 		NewLine();
 	}
+	if (MsgCode == 3) {
+		//undefined
+	}
 
 
 	ZalimColor();
@@ -230,6 +233,11 @@ void ProfilePage(int MsgCode = 0) {
 		SuccessColor(); EqualLineText("Comment Posted!"); WhiteColor(true);
 		NewLine();
 	}
+	if (MsgCode == 6) {
+		SuccessColor(); EqualLineText("Post Deleted!"); WhiteColor(true);
+		NewLine();
+	}
+
 	ZalimColor();
 	EqualLine(false, true); printf("%s - %s's profile", AppTitle, Cname); EqualLine(true, true);
 	WhiteColor(true);
@@ -249,14 +257,14 @@ void ProfilePage(int MsgCode = 0) {
 	EqualLine(true, true);
 	WhiteColor(true);
 	int tpost = GetTotalWallPosts(Cusername);
-	char ArrMenu[5][50];
+	char ArrMenu[6][50];
 	strcpy_s(ArrMenu[0], "Post on your profile");
 	strcpy_s(ArrMenu[1], "see your friends");
 	strcpy_s(ArrMenu[2], "search someone");
 	strcpy_s(ArrMenu[3], "Delete Account");
 	strcpy_s(ArrMenu[4], "Logout");
 	strcpy_s(ArrMenu[5], "Exit");
-	ProfilePageMenu(CreateMenu(ArrMenu[0], 5, 50, true, true), tpost+10);
+	ProfilePageMenu(CreateMenu(ArrMenu[0], 6, 50, true, true), tpost+10);
 }
 
 void ProfilePageMenu(int x, int max_post) {
@@ -318,6 +326,10 @@ void ShowPost(char userwall[50], int num, int MsgCode) {
 		NewLine();
 		
 		break;
+
+	case 3:
+		ErrorColor(); EqualLineText("You can't delete this Post!"); WhiteColor(true);
+		NewLine();
 	}
 	char user[20], post[255]; int tpost = GetTotalWallPosts(userwall);
 	strcpy(user, userwall);
@@ -377,7 +389,14 @@ void ShowPostMenu(int x, char user[50], int num) {
 		}
 		//printf("exec");
 		break;
-
+	/*case x:
+		if (strcmp(user, Cusername) == 0) {
+			DeletePost(user, num);
+			ProfilePage(6);
+		}else {
+			ShowPost(user, num, 3);
+		}
+		break;*/
 	case 3:
 		(strcmp(user, Cusername) == 0) ? ProfilePage(0) : ViewFriendProfile(user, 0);
 		break;
